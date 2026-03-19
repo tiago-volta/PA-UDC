@@ -51,16 +51,16 @@ public class CinemaServiceTest {
 
     private User createAndSignUpUser(String userName) throws Exception {
         User user = new User(userName, "1234", "Paco", "Díaz", userName + "@gmail.com");
-        try{
+        try {
             userService.signUp(user);
-        }catch (DuplicateInstanceException e){
+        } catch (DuplicateInstanceException e) {
             throw new RuntimeException(e);
         }
         return user;
     }
 
-    private Movie addMovie(String title, int runtime){
-        return movieDao.save(new Movie(title, "Peliculón", runtime ));
+    private Movie addMovie(String title, int runtime) {
+        return movieDao.save(new Movie(title, "Peliculón", runtime));
     }
 
     private Session addSession(Movie movie, Room room, LocalDateTime date, String price) {
@@ -70,7 +70,6 @@ public class CinemaServiceTest {
     private Room addRoom(String name, int capacity) {
         return roomDao.save(new Room(name, capacity));
     }
-
 
 
     @Test
@@ -145,12 +144,24 @@ public class CinemaServiceTest {
         });
     }
 
+    @Test
+    public void testFindMovieById() throws InstanceNotFoundException {
+        Movie movie = addMovie("Oppenheimer", 180);
 
+        Movie foundMovie = cinemaService.findMovieById(movie.getId());
 
+        assertNotNull(foundMovie);
+        assertEquals(movie.getId(), foundMovie.getId());
+        assertNotEquals("Andy y Lucas", foundMovie.getTitle());
+        assertEquals("Oppenheimer", foundMovie.getTitle());
+    }
 
-
-
-
+    @Test
+    public void testFindMovieByIdNotFound() {
+        assertThrows(InstanceNotFoundException.class, () -> {
+            cinemaService.findMovieById(NON_EXISTENT_ID);
+        });
+    }
 
 
 }
