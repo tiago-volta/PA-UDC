@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "Session")
@@ -22,6 +23,8 @@ public class Session {
 	private Room room;
 	private LocalDateTime date;
 	private BigDecimal price;
+	private int freeSeats;
+	private long version;
 
 	public Session() {}
 
@@ -30,6 +33,7 @@ public class Session {
 		this.room = room;
 		this.date = date.withNano(0);
 		this.price = price.setScale(2, RoundingMode.HALF_EVEN);
+		this.freeSeats = room.getCapacity();
 	}
 
 	@Id
@@ -80,4 +84,20 @@ public class Session {
 		this.price = price.setScale(2, RoundingMode.HALF_EVEN);
 	}
 
+	public int getFreeSeats() {
+		return freeSeats;
+	}
+
+	public void setFreeSeats(int freeSeats) {
+		this.freeSeats = freeSeats;
+	}
+
+	@Version
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
 }
