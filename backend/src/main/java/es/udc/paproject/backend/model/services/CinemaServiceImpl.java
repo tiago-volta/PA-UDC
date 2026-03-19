@@ -1,9 +1,7 @@
 package es.udc.paproject.backend.model.services;
 
-import es.udc.paproject.backend.model.entities.Movie;
-import es.udc.paproject.backend.model.entities.MovieSessions;
-import es.udc.paproject.backend.model.entities.Session;
-import es.udc.paproject.backend.model.entities.SessionDao;
+import es.udc.paproject.backend.model.entities.*;
+import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,6 +19,8 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Autowired
     private SessionDao sessionDao;
+    @Autowired
+    private MovieDao movieDao;
 
     //Funcionalidad 1
     @Override
@@ -68,6 +69,20 @@ public class CinemaServiceImpl implements CinemaService {
         }
 
         return cartelera;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Movie findMovieById(Long id) throws InstanceNotFoundException {
+
+        Optional<Movie> movie = movieDao.findById(id);
+
+        if (!movie.isPresent()) {
+            throw new InstanceNotFoundException("project.entities.movie", id);
+        }
+
+        return movie.get();
+
     }
 
 }
