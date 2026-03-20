@@ -85,6 +85,7 @@ public class CinemaServiceImpl implements CinemaService {
         return cartelera;
     }
 
+	//Funcionalidad 2
     @Override
     @Transactional(readOnly = true)
     public Movie findMovieById(Long id) throws InstanceNotFoundException {

@@ -212,7 +212,6 @@ public class CinemaServiceTest {
 
 	@Test
 	public void testFindCarteleraSuccess() throws Exception {
-		//Datos para la base de datos
 
 		Movie movie1 = addMovie("Batman", 150);
 		Room room1 = addRoom("Sala VIP", 20);
@@ -223,6 +222,7 @@ public class CinemaServiceTest {
 		// Sesiones para hoy
 		LocalDateTime hoySesion1 = LocalDate.now().atTime(23, 54).withNano(0);
 		LocalDateTime hoySesion2 = LocalDate.now().atTime(23, 55).withNano(0);
+		//Al usar at.Time, dependiendo de la hora que se pruebe pasa el test o no
 
 		// Sesiones para mañana
 		LocalDate mananaDate = LocalDate.now().plusDays(1);
@@ -280,8 +280,6 @@ public class CinemaServiceTest {
 			cinemaService.findCartelera(futuroLejano);
 		});
 	}
-
-
 
 	@Test
 	public void testFindPurchasesNonExistentUser() {
@@ -351,8 +349,6 @@ public class CinemaServiceTest {
 		assertEquals(3, found.getNumTickets());
 		assertFalse(found.isDelivered());
 	}
-
-	// --- FUNC-6: entregar las entradas de una compra ---
 
 	@Test
 	public void testDeliverTicketsNonExistentPurchase() {

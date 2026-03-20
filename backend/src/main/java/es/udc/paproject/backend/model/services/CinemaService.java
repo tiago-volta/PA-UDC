@@ -22,20 +22,11 @@ public interface CinemaService {
     
     public Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException;
 
-	/**
-	 * FUNC-5: histórico de compras de un usuario.
-	 */
 	Block<Purchase> findPurchases(Long userId, int page, int size) throws InstanceNotFoundException;
 
-	/**
-	 * FUNC-5: detalle de una compra de un usuario.
-	 */
 	Purchase findPurchase(Long userId, Long purchaseId)
 		throws InstanceNotFoundException, PermissionException;
 
-	/**
-	 * FUNC-6: entregar entradas de una compra.
-	 */
 	void deliverTickets(Long purchaseId, String bankCard)
 		throws InstanceNotFoundException, IncorrectCreditCardException,
 				AlreadyDeliveredException, SessionAlreadyStartedException;

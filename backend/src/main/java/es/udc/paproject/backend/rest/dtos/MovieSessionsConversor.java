@@ -10,7 +10,6 @@ public class MovieSessionsConversor {
     private MovieSessionsConversor() {}
 
     public final static MovieSessionsDto toMovieSessionsDto(MovieSessions movieSessions) {
-        // Invocamos a los otros dos conversores
         return new MovieSessionsDto(
                 MovieConversor.toMovieSummaryDto(movieSessions.getMovie()),
                 SessionConversor.toSessionDtos(movieSessions.getSessions())

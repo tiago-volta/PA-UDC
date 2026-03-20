@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface SessionDao extends CrudRepository<Session, Long> {
 	
 	@Query("SELECT s FROM Session s WHERE s.date >= ?1 AND s.date <= ?2 " +
-			"ORDER BY s.movie.title ASC, s.date ASC")	//Ordenamos por título de película y fecha de sesión, en este caso es lo menos eficiente porque se hace un JOIN con la tabla Movie.
+			"ORDER BY s.movie.title ASC, s.date ASC")
 	List<Session> findSessionsByDate(LocalDateTime start, LocalDateTime end);
 }
