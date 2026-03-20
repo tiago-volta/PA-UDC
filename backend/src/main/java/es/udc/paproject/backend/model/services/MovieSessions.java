@@ -1,4 +1,7 @@
-package es.udc.paproject.backend.model.entities;
+package es.udc.paproject.backend.model.services;
+import es.udc.paproject.backend.model.entities.Movie;
+import es.udc.paproject.backend.model.entities.Session;
+
 import java.util.List;
 
 
