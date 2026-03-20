@@ -1,12 +1,19 @@
 package es.udc.paproject.backend.rest.controllers;
 
+import static es.udc.paproject.backend.rest.dtos.SessionConversor.toSessionDto;
+
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 import es.udc.paproject.backend.model.services.CinemaService;
+import es.udc.paproject.backend.rest.dtos.SessionDto;
 import es.udc.paproject.backend.rest.dtos.MovieConversor;
 import es.udc.paproject.backend.rest.dtos.MovieDto;
 import es.udc.paproject.backend.rest.dtos.MovieSessionsConversor;
 import es.udc.paproject.backend.rest.dtos.MovieSessionsDto;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,5 +50,11 @@ public class CatalogController {
     @Transactional(readOnly = true)
     public MovieDto findMovie(@PathVariable Long id) throws InstanceNotFoundException {
         return MovieConversor.toMovieDto(cinemaService.findMovieById(id));
+    }
+
+    @GetMapping("/sessions/{id}")
+    @Transactional(readOnly = true)
+    public SessionDto getSession(@PathVariable Long id) throws InstanceNotFoundException,SessionAlreadyStartedException {
+        return toSessionDto(cinemaService.findSession(id));
     }
 }
