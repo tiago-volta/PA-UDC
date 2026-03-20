@@ -4,6 +4,8 @@ import es.udc.paproject.backend.model.entities.Movie;
 import es.udc.paproject.backend.model.entities.MovieSessions;
 import es.udc.paproject.backend.model.entities.Session;
 import es.udc.paproject.backend.model.entities.Purchase;
+import es.udc.paproject.backend.model.exceptions.PermissionException;
+import es.udc.paproject.backend.model.services.Block;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
@@ -20,6 +22,13 @@ public interface CinemaService {
     
     public Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException;
 
+	Block<Purchase> findPurchases(Long userId, int page, int size) throws InstanceNotFoundException;
+
+	Purchase findPurchase(Long userId, Long purchaseId)
+		throws InstanceNotFoundException, PermissionException;
+
 	public Purchase buyTickets(Long userId, Long sessionId, int numTickets, String bankCard)
 		throws InstanceNotFoundException, NotEnoughSeatsException, SessionAlreadyStartedException;
+
+        
 }

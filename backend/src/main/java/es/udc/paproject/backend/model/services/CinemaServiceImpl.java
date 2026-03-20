@@ -4,6 +4,7 @@ import es.udc.paproject.backend.model.entities.*;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
+import es.udc.paproject.backend.model.exceptions.PermissionException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 @Service
 @Transactional
@@ -141,6 +146,41 @@ public class CinemaServiceImpl implements CinemaService {
 		Purchase purchase = new Purchase(user, sessionEntity, numTickets, bankCard, LocalDateTime.now(), false);
 
 		return purchaseDao.save(purchase);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Block<Purchase> findPurchases(Long userId, int page, int size) throws InstanceNotFoundException {
+
+		// Validación de existencia del usuario y permiso (sin validaciones de formato).
+		permissionChecker.checkUser(userId);
+
+		Pageable pageable = PageRequest.of(page, size);
+		Slice<Purchase> slice = purchaseDao.findByUserIdOrderByPurchaseDateDesc(userId, pageable);
+
+		return new Block<>(slice.getContent(), slice.hasNext());
+	}
+
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Purchase findPurchase(Long userId, Long purchaseId)
+			throws InstanceNotFoundException, PermissionException {
+
+		Optional<Purchase> purchaseOpt = purchaseDao.findById(purchaseId);
+
+		if (!purchaseOpt.isPresent()) {
+			throw new InstanceNotFoundException("project.entities.purchase", purchaseId);
+		}
+
+		Purchase purchase = purchaseOpt.get();
+
+		// Solo el dueño de la compra puede verla.
+		if (!purchase.getUser().getId().equals(userId)) {
+			throw new PermissionException();
+		}
+
+		return purchase;
 	}
 
 }
