@@ -19,44 +19,50 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
-	@Autowired
-	private JwtGenerator jwtGenerator;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
-		http.cors(Customizer.withDefaults())
-			.csrf((csrf) -> csrf.disable())
-			.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(new JwtFilter(jwtGenerator), UsernamePasswordAuthenticationFilter.class)
-			.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
-				.requestMatchers(HttpMethod.POST, "/users/login").permitAll()
-				.requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
-				.requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
-				.requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasRole("USER")
-				.anyRequest().denyAll());
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		return http.build();
+        http.cors(Customizer.withDefaults())
+                .csrf((csrf) -> csrf.disable())
+                .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtFilter(jwtGenerator), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(HttpMethod.POST, "/users/signUp").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/catalog/movies").permitAll()    // <-- PÚBLICO
+                        .requestMatchers(HttpMethod.GET, "/catalog/movies/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/catalog/sessions/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/loginFromServiceToken").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("SPECTATOR", "TICKET_SELLER")
+                        .requestMatchers(HttpMethod.POST, "/users/*/changePassword").hasAnyRole("SPECTATOR", "TICKET_SELLER")
+                        .requestMatchers(HttpMethod.POST, "/catalog/sessions/*/buyTickets").hasRole("SPECTATOR")
+                        .requestMatchers(HttpMethod.GET, "/purchases", "/purchases/*").hasRole("SPECTATOR")
+                        .requestMatchers(HttpMethod.POST, "/purchases/*/deliver").hasRole("TICKET_SELLER")
+                        .anyRequest().denyAll());
 
-	}
-	
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		
-		CorsConfiguration config = new CorsConfiguration();
-	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		
-		config.setAllowCredentials(true);
-	    config.setAllowedOriginPatterns(Arrays.asList("*"));
-	    config.addAllowedHeader("*");
-	    config.addAllowedMethod("*");
-	    
-	    source.registerCorsConfiguration("/**", config);
-	    
-	    return source;
-	    
-	 }
+        return http.build();
+
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+
+    }
 
 }
