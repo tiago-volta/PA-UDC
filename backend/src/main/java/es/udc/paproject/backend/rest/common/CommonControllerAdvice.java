@@ -23,6 +23,10 @@ public class CommonControllerAdvice {
 	private final static String INSTANCE_NOT_FOUND_EXCEPTION_CODE = "project.exceptions.InstanceNotFoundException";
 	private final static String DUPLICATE_INSTANCE_EXCEPTION_CODE = "project.exceptions.DuplicateInstanceException";
 	private final static String PERMISSION_EXCEPTION_CODE = "project.exceptions.PermissionException";
+	private final static String NOT_ENOUGH_SEATS_EXCEPTION_CODE = "project.exceptions.NotEnoughSeatsException";
+	private final static String SESSION_ALREADY_STARTED_EXCEPTION_CODE = "project.exceptions.SessionAlreadyStartedException";
+
+
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -75,6 +79,28 @@ public class CommonControllerAdvice {
 
 		return new ErrorsDto(errorMessage);
 		
+	}
+
+	@ExceptionHandler(NotEnoughSeatsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ResponseBody
+	public ErrorsDto handleNotEnoughSeatsException(NotEnoughSeatsException exception, Locale locale) {
+
+		String errorMessage = messageSource.getMessage(NOT_ENOUGH_SEATS_EXCEPTION_CODE,
+				new Object[] { exception.getSessionId() }, NOT_ENOUGH_SEATS_EXCEPTION_CODE, locale);
+
+		return new ErrorsDto(errorMessage);
+	}
+
+	@ExceptionHandler(SessionAlreadyStartedException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ResponseBody
+	public ErrorsDto handleSessionAlreadyStartedException(SessionAlreadyStartedException exception, Locale locale) {
+
+		String errorMessage = messageSource.getMessage(SESSION_ALREADY_STARTED_EXCEPTION_CODE,
+				new Object[] { exception.getSessionId() }, SESSION_ALREADY_STARTED_EXCEPTION_CODE, locale);
+
+		return new ErrorsDto(errorMessage);
 	}
 
 }
