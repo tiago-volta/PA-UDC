@@ -206,5 +206,76 @@ public class CinemaServiceTest {
 				() -> cinemaService.findSession(session.getId()));
 	}
 
+	@Test
+	public void testBuyTicketsNonExistentUserOrSession() throws Exception {
+		assertThrows(InstanceNotFoundException.class,
+				() -> cinemaService.buyTickets(NON_EXISTENT_ID, 1L, 2, "1111"));
+		User user = createAndSignUpUser("viewer0");
+		assertThrows(InstanceNotFoundException.class,
+				() -> cinemaService.buyTickets(user.getId(), NON_EXISTENT_ID, 2, "1111"));
+	}
+
+	@Test
+	public void testBuyTicketsSuccess() throws Exception {
+		User user = createAndSignUpUser("viewer1");
+		Movie movie = addMovie("ET", 120);
+		Room room = addRoom("Sala 1", 10);
+		Session session= addSession(movie, room, LocalDateTime.now().plusDays(1),"5.00");
+
+		int numTickets = 2;
+		String bankCard = "1111-2222-3333-4444";
+
+		Purchase compra = cinemaService.buyTickets(user.getId(), session.getId(), numTickets, bankCard);
+
+		assertNotNull(compra.getId());
+		assertEquals(user.getId(), compra.getUser().getId());
+		assertEquals(session.getId(), compra.getSession().getId());
+		assertEquals(numTickets, compra.getNumTickets());
+		assertEquals(bankCard, compra.getBankCard());
+		assertEquals(session.getPrice().multiply(new BigDecimal(numTickets)), compra.getTotalPrice());
+	}
+
+	@Test
+	public void testBuyTicketsUpdatesFreeSeatsAndFields() throws Exception {
+		User user = createAndSignUpUser("viewer");
+		Movie movie = addMovie("F1", 120);
+		Room room = addRoom("Sala 8", 10);
+		Session session = addSession(movie, room, LocalDateTime.now().plusDays(1), "5.00");
+
+		int initialFreeSeats = session.getFreeSeats();
+
+		Purchase purchase = cinemaService.buyTickets(user.getId(), session.getId(), 3, "9999-8888-7777-6666");
+
+		Session updatedSession = sessionDao.findById(session.getId()).get();
+
+		assertEquals(initialFreeSeats - 3, updatedSession.getFreeSeats());
+		assertEquals(3, purchase.getNumTickets());
+		assertEquals("9999-8888-7777-6666", purchase.getBankCard());
+		assertNotNull(purchase.getTotalPrice());
+	}
+
+	@Test
+	public void testBuyTicketsNotEnoughSeats() throws Exception {
+		User user = createAndSignUpUser("viewer2");
+		Movie movie = addMovie("Interestelar", 169);
+		Room room = addRoom("Sala 2", 2);
+		Session session = addSession(movie, room, LocalDateTime.now().plusDays(1), "5.00");
+
+		assertThrows(NotEnoughSeatsException.class,
+				() -> cinemaService.buyTickets(user.getId(), session.getId(), 1000, "1111-2222-3333-4444"));
+	}
+
+	@Test
+	public void testBuyTicketsSessionAlreadyStarted() throws Exception {
+		User user = createAndSignUpUser("viewer");
+		Movie movie = addMovie("Up", 100);
+		Room room = addRoom("Sala 9", 20);
+		LocalDateTime pastDate = LocalDateTime.now().minusHours(1).withNano(0);
+		Session session = addSession(movie, room, pastDate, "6.00");
+
+		assertThrows(SessionAlreadyStartedException.class,
+				() -> cinemaService.buyTickets(user.getId(), session.getId(), 2, "1111-2222-3333-4444"));
+	}
+
 
 }
