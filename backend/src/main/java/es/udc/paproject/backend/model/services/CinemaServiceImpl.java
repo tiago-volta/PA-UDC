@@ -24,6 +24,10 @@ public class CinemaServiceImpl implements CinemaService {
     private SessionDao sessionDao;
     @Autowired
     private MovieDao movieDao;
+    @Autowired
+    private PurchaseDao purchaseDao;
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     //Funcionalidad 1
     @Override
@@ -106,6 +110,37 @@ public class CinemaServiceImpl implements CinemaService {
 		}
 
 		return sessionEntity;
+	}
+
+	@Override
+	public Purchase buyTickets(Long userId, Long sessionId, int numTickets, String bankCard)
+			throws InstanceNotFoundException, NotEnoughSeatsException, SessionAlreadyStartedException {
+
+		User user = permissionChecker.checkUser(userId);
+
+		Optional<Session> session = sessionDao.findById(sessionId);
+
+		if (!session.isPresent()) {
+			throw new InstanceNotFoundException("project.entities.session", sessionId);
+		}
+
+		Session sessionEntity = session.get();
+
+		// La sesión ya ha comenzado.
+		if (!sessionEntity.getDate().isAfter(LocalDateTime.now())) {
+			throw new SessionAlreadyStartedException(sessionId);
+		}
+
+		// No hay suficientes plazas libres.
+		if (numTickets > sessionEntity.getFreeSeats()) {
+			throw new NotEnoughSeatsException(sessionId);
+		}
+
+		sessionEntity.setFreeSeats(sessionEntity.getFreeSeats() - numTickets);
+
+		Purchase purchase = new Purchase(user, sessionEntity, numTickets, bankCard, LocalDateTime.now(), false);
+
+		return purchaseDao.save(purchase);
 	}
 
 }

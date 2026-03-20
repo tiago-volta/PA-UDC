@@ -20,4 +20,6 @@ public interface CinemaService {
     
     public Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException;
 
+	public Purchase buyTickets(Long userId, Long sessionId, int numTickets, String bankCard)
+		throws InstanceNotFoundException, NotEnoughSeatsException, SessionAlreadyStartedException;
 }
