@@ -1,14 +1,16 @@
 package es.udc.paproject.backend.model.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class User {
-	
-	public enum RoleType {USER};
+
+	public enum RoleType { SPECTATOR, TICKET_SELLER }
 
 	private Long id;
 	private String userName;
@@ -18,16 +20,20 @@ public class User {
 	private String email;
 	private RoleType role;
 
-	public User() {}
+	public User() {
+	}
 
-	public User(String userName, String password, String firstName, String lastName, String email) {
-
+	public User(String userName, String password, String firstName, String lastName, String email, RoleType role) {
 		this.userName = userName;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		
+		this.role = role;
+	}
+
+	public User(String userName, String password, String firstName, String lastName, String email) {
+		this(userName, password, firstName, lastName, email, RoleType.SPECTATOR);
 	}
 
 	@Id
@@ -80,6 +86,7 @@ public class User {
 		this.email = email;
 	}
 
+	@Enumerated(EnumType.ORDINAL)
 	public RoleType getRole() {
 		return role;
 	}
