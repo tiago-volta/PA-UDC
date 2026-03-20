@@ -3,7 +3,7 @@ package es.udc.paproject.backend.rest.dtos;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import es.udc.paproject.backend.model.entities.MovieSessions;
+import es.udc.paproject.backend.model.services.MovieSessions;
 
 public class MovieSessionsConversor {
 

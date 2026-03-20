@@ -1,13 +1,11 @@
 package es.udc.paproject.backend.model.services;
 
 import es.udc.paproject.backend.model.entities.Movie;
-import es.udc.paproject.backend.model.entities.MovieSessions;
 import es.udc.paproject.backend.model.entities.Session;
 import es.udc.paproject.backend.model.entities.Purchase;
 import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
 import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
 import es.udc.paproject.backend.model.exceptions.PermissionException;
-import es.udc.paproject.backend.model.services.Block;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
