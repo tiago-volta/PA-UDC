@@ -3,6 +3,9 @@ package es.udc.paproject.backend.model.services;
 import es.udc.paproject.backend.model.entities.*;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,5 +87,25 @@ public class CinemaServiceImpl implements CinemaService {
         return movie.get();
 
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public Session findSession(Long sessionId) throws InstanceNotFoundException, SessionAlreadyStartedException {
+
+		Optional<Session> session = sessionDao.findById(sessionId);
+
+		if (!session.isPresent()) {
+			throw new InstanceNotFoundException("project.entities.session", sessionId);
+		}
+
+		Session sessionEntity = session.get();
+
+		// No se permite consultar sesiones que ya han comenzado.
+		if (!sessionEntity.getDate().isAfter(LocalDateTime.now())) {
+			throw new SessionAlreadyStartedException(sessionId);
+		}
+
+		return sessionEntity;
+	}
 
 }
