@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import es.udc.paproject.backend.model.exceptions.DuplicateInstanceException;
+import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
+import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
+import es.udc.paproject.backend.model.exceptions.InvalidDateException;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.PermissionException;
 import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
@@ -26,6 +29,8 @@ public class CommonControllerAdvice {
 	private final static String DUPLICATE_INSTANCE_EXCEPTION_CODE = "project.exceptions.DuplicateInstanceException";
 	private final static String PERMISSION_EXCEPTION_CODE = "project.exceptions.PermissionException";
 	private final static String NOT_ENOUGH_SEATS_EXCEPTION_CODE = "project.exceptions.NotEnoughSeatsException";
+	private final static String INCORRECT_CREDIT_CARD_EXCEPTION_CODE = "project.exceptions.IncorrectCreditCardException";
+	private final static String ALREADY_DELIVERED_EXCEPTION_CODE = "project.exceptions.AlreadyDeliveredException";
 	private final static String SESSION_ALREADY_STARTED_EXCEPTION_CODE = "project.exceptions.SessionAlreadyStartedException";
 
 
@@ -94,6 +99,28 @@ public class CommonControllerAdvice {
 		return new ErrorsDto(errorMessage);
 	}
 
+	@ExceptionHandler(IncorrectCreditCardException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleIncorrectCreditCardException(IncorrectCreditCardException exception, Locale locale) {
+
+		String errorMessage = messageSource.getMessage(INCORRECT_CREDIT_CARD_EXCEPTION_CODE,
+				new Object[] { exception.getPurchaseId() }, INCORRECT_CREDIT_CARD_EXCEPTION_CODE, locale);
+
+		return new ErrorsDto(errorMessage);
+	}
+
+	@ExceptionHandler(AlreadyDeliveredException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ResponseBody
+	public ErrorsDto handleAlreadyDeliveredException(AlreadyDeliveredException exception, Locale locale) {
+
+		String errorMessage = messageSource.getMessage(ALREADY_DELIVERED_EXCEPTION_CODE,
+				new Object[] { exception.getPurchaseId() }, ALREADY_DELIVERED_EXCEPTION_CODE, locale);
+
+		return new ErrorsDto(errorMessage);
+	}
+
 	@ExceptionHandler(SessionAlreadyStartedException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ResponseBody
@@ -101,6 +128,17 @@ public class CommonControllerAdvice {
 
 		String errorMessage = messageSource.getMessage(SESSION_ALREADY_STARTED_EXCEPTION_CODE,
 				new Object[] { exception.getSessionId() }, SESSION_ALREADY_STARTED_EXCEPTION_CODE, locale);
+
+		return new ErrorsDto(errorMessage);
+	}
+
+	@ExceptionHandler(InvalidDateException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorsDto handleInvalidDateException(InvalidDateException ex, Locale locale) {
+
+		String errorMessage = messageSource.getMessage("project.exceptions.InvalidDateException",
+				new Object[] { ex.getDate() }, "project.exceptions.InvalidDateException", locale);
 
 		return new ErrorsDto(errorMessage);
 	}
