@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import es.udc.paproject.backend.model.exceptions.DuplicateInstanceException;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.PermissionException;
+import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 
 @ControllerAdvice
 public class CommonControllerAdvice {
