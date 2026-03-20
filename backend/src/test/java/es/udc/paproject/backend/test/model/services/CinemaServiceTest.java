@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import es.udc.paproject.backend.model.exceptions.*;
-import es.udc.paproject.backend.model.entities.MovieSessions;
+import es.udc.paproject.backend.model.services.MovieSessions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -221,8 +221,8 @@ public class CinemaServiceTest {
 		Room room2 = addRoom("Sala 14", 60);
 
 		// Sesiones para hoy
-		LocalDateTime hoySesion1 = LocalDate.now().atTime(23, 0).withNano(0);
-		LocalDateTime hoySesion2 = LocalDate.now().atTime(14, 0).withNano(0);
+		LocalDateTime hoySesion1 = LocalDate.now().atTime(23, 54).withNano(0);
+		LocalDateTime hoySesion2 = LocalDate.now().atTime(23, 55).withNano(0);
 
 		// Sesiones para mañana
 		LocalDate mananaDate = LocalDate.now().plusDays(1);
