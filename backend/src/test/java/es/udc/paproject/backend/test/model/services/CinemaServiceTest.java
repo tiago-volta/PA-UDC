@@ -19,6 +19,8 @@ import es.udc.paproject.backend.model.entities.Room;
 import es.udc.paproject.backend.model.entities.RoomDao;
 import es.udc.paproject.backend.model.entities.Session;
 import es.udc.paproject.backend.model.entities.SessionDao;
+import es.udc.paproject.backend.model.entities.Purchase;
+import es.udc.paproject.backend.model.entities.PurchaseDao;
 import es.udc.paproject.backend.model.entities.User;
 import es.udc.paproject.backend.model.services.Block;
 import es.udc.paproject.backend.model.services.CinemaService;
@@ -48,6 +50,11 @@ public class CinemaServiceTest {
     @Autowired
     private SessionDao sessionDao;
 
+    @Autowired
+    private RoomDao roomDao;
+
+    @Autowired
+    private PurchaseDao purchaseDao;
 
     private User createAndSignUpUser(String userName) throws Exception {
         User user = new User(userName, "1234", "Paco", "Díaz", userName + "@gmail.com");
@@ -162,6 +169,42 @@ public class CinemaServiceTest {
             cinemaService.findMovieById(NON_EXISTENT_ID);
         });
     }
+
+    @Test
+	public void testFindSessionSuccess() throws Exception {
+		Movie movie = addMovie("Regreso al futuro", 116);
+		Room room = addRoom("Sala 3", 50);
+		LocalDateTime date = LocalDateTime.now().plusDays(1).withNano(0);
+		BigDecimal price = new BigDecimal("8.50");
+		Session session = addSession(movie, room, date, price.toString());
+
+		Session found = cinemaService.findSession(session.getId());
+
+		assertNotNull(found);
+		assertEquals(session.getId(), found.getId());
+		assertEquals("Regreso al futuro", found.getMovie().getTitle());
+		assertEquals(116, found.getMovie().getRuntime());
+		assertEquals("Sala 3", found.getRoom().getName());
+		assertEquals(50, found.getRoom().getCapacity());
+		assertEquals(date, found.getDate());
+		assertEquals(price, found.getPrice());
+	}
+
+	@Test
+	public void testFindSessionNonExistent() {
+		assertThrows(InstanceNotFoundException.class, () -> cinemaService.findSession(NON_EXISTENT_ID));
+	}
+
+	@Test
+	public void testFindSessionAlreadyStarted() {
+		Movie movie = addMovie("TorrentePresidente", 100);
+		Room room = addRoom("Sala 5", 30);
+		LocalDateTime pastDate = LocalDateTime.now().minusHours(1).withNano(0);
+		Session session = addSession(movie, room, pastDate, "7.00");
+
+		assertThrows(SessionAlreadyStartedException.class,
+				() -> cinemaService.findSession(session.getId()));
+	}
 
 
 }
