@@ -3,6 +3,8 @@ package es.udc.paproject.backend.model.services;
 import es.udc.paproject.backend.model.entities.*;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
 import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
+import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
 import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
 import es.udc.paproject.backend.model.exceptions.PermissionException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
@@ -148,6 +150,9 @@ public class CinemaServiceImpl implements CinemaService {
 		return purchaseDao.save(purchase);
 	}
 
+	/**
+	 * FUNC-5: histórico de compras de un usuario.
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Block<Purchase> findPurchases(Long userId, int page, int size) throws InstanceNotFoundException {
@@ -161,7 +166,9 @@ public class CinemaServiceImpl implements CinemaService {
 		return new Block<>(slice.getContent(), slice.hasNext());
 	}
 
-	
+	/**
+	 * FUNC-5: detalle de una compra de un usuario.
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Purchase findPurchase(Long userId, Long purchaseId)
@@ -181,6 +188,43 @@ public class CinemaServiceImpl implements CinemaService {
 		}
 
 		return purchase;
+	}
+
+	/**
+	 * FUNC-6: entregar entradas de una compra.
+	 */
+	@Override
+	public void deliverTickets(Long purchaseId, String bankCard)
+			throws InstanceNotFoundException, IncorrectCreditCardException,
+					AlreadyDeliveredException, SessionAlreadyStartedException {
+
+		Optional<Purchase> purchaseOpt = purchaseDao.findById(purchaseId);
+
+		if (!purchaseOpt.isPresent()) {
+			throw new InstanceNotFoundException("project.entities.purchase", purchaseId);
+		}
+
+		Purchase purchase = purchaseOpt.get();
+
+		// Tarjeta incorrecta
+		if (!purchase.getBankCard().equals(bankCard)) {
+			throw new IncorrectCreditCardException(purchaseId);
+		}
+
+		// Entradas ya entregadas
+		if (purchase.isDelivered()) {
+			throw new AlreadyDeliveredException(purchaseId);
+		}
+
+		Session session = purchase.getSession();
+
+		// La sesión ya ha comenzado
+		if (!session.getDate().isAfter(LocalDateTime.now())) {
+			throw new SessionAlreadyStartedException(session.getId());
+		}
+
+		// Marcamos las entradas como entregadas
+		purchase.setDelivered(true);
 	}
 
 }
