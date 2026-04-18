@@ -1,9 +1,10 @@
 export default {
 
-    'project.app.Footer.text': 'PA Project - Area de Enxeñaría Telemática - Universidade da Coruña',
+    'project.app.Footer.text': 'PA Cinema - Area de Enxeñaría Telemática - Universidade da Coruña',
+    'project.app.Header.brand': 'PA Cinema',
     'project.app.Header.home': 'Inicio',
     'project.app.Header.logout': 'Saír',
-    'project.app.Home.welcome': 'Contido da páxina principal de PA Project!',
+    'project.app.Home.welcome': 'Carteleira — PA Cinema',
     
     'project.common.ErrorDialog.title': 'Erro',
 
@@ -34,6 +35,9 @@ export default {
     'project.users.Login.title': 'Autenticarse',
     'project.users.SignUp.fields.confirmPassword': 'Confirmar contrasinal',
     'project.users.SignUp.title': 'Rexistrarse',
-    'project.users.UpdateProfile.title': 'Actualizar perfil'
+    'project.users.UpdateProfile.title': 'Actualizar perfil',
 
+    'project.catalog.Movies.noMoviesFound': 'Non se atoparon películas',
+    'project.catalog.Movies.movie': 'Película',
+    'project.catalog.Movies.sessions': 'Sesións',
 }

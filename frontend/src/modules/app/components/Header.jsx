@@ -16,7 +16,9 @@ const Header = () => {
 
         <Navbar bg="light" expand="lg" className="border-bottom">
             <Container fluid>
-                <Navbar.Brand as={Link} to="/">PA Project</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/">
+                    <FormattedMessage id="project.app.Header.brand"/>
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarSupportedContent" className="mb-3"/>
                 <Navbar.Collapse id="navbarSupportedContent">
 

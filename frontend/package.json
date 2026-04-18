@@ -2,7 +2,7 @@
   "name": "pa-project",
   "version": "1.0.0",
   "type": "module",
-  "description": "PA Project",
+  "description": "PA Cinema",
   "private": true,
   "license": "MIT",
   "scripts": {
