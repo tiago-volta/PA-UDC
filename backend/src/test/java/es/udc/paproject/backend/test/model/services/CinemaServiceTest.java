@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import es.udc.paproject.backend.model.exceptions.*;
-import es.udc.paproject.backend.model.services.MovieSessions;
+import es.udc.paproject.backend.model.entities.MovieSessions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -82,14 +82,11 @@ public class CinemaServiceTest {
 
 	@Test
 	public void testFindSessionSuccess() throws Exception {
-		/*
-		Movie movie = movieDao.save(new Movie("Regreso al futuro", "Peliculón", 116));
-		Room room = roomDao.save(new Room("Sala 3", 50));*/
 		Movie movie = addMovie("Regreso al futuro", 116);
 		Room room = addRoom("Sala 3", 50);
 		LocalDateTime date = LocalDateTime.now().plusDays(1).withNano(0);
 		BigDecimal price = new BigDecimal("8.50");
-		Session session = sessionDao.save(new Session(movie, room, date, price));
+		Session session = addSession(movie, room, date, price.toString());
 
 		Session found = cinemaService.findSession(session.getId());
 
@@ -140,12 +137,14 @@ public class CinemaServiceTest {
 
 		Purchase compra = cinemaService.buyTickets(user.getId(), session.getId(), numTickets, bankCard);
 
-		assertNotNull(compra.getId());
-		assertEquals(user.getId(), compra.getUser().getId());
-		assertEquals(session.getId(), compra.getSession().getId());
-		assertEquals(numTickets, compra.getNumTickets());
-		assertEquals(bankCard, compra.getBankCard());
-		assertEquals(session.getPrice().multiply(new BigDecimal(numTickets)), compra.getTotalPrice());
+		Purchase found = purchaseDao.findById(compra.getId()).get();
+
+		assertEquals(user.getId(), found.getUser().getId());
+		assertEquals(session.getId(), found.getSession().getId());
+		assertEquals(numTickets, found.getNumTickets());
+		assertEquals(bankCard, found.getBankCard());
+		assertEquals(session.getPrice().multiply(new BigDecimal(numTickets)), found.getTotalPrice());
+		assertFalse(found.isDelivered());
 	}
 
 	@Test
@@ -168,12 +167,11 @@ public class CinemaServiceTest {
 	}
 
 	@Test
-	public void testBuyTicketsNotEnoughSeatsSkeleton() throws Exception {
+	public void testBuyTicketsNotEnoughSeats() throws Exception {
 		User user = createAndSignUpUser("viewer2");
-		Movie movie = movieDao.save(new Movie("Interestelar", "Peliculón", 169));
-		Room room = roomDao.save(new Room("Sala 2", 2));
-		Session session = sessionDao.save(new Session(movie, room,
-				LocalDateTime.now().plusDays(1), new BigDecimal("5.00")));
+		Movie movie = addMovie("Interestelar", 169);
+		Room room = addRoom("Sala 2", 2);
+		Session session = addSession(movie, room, LocalDateTime.now().plusDays(1), "5.00");
 
 		assertThrows(NotEnoughSeatsException.class,
 				() -> cinemaService.buyTickets(user.getId(), session.getId(), 1000, "1111-2222-3333-4444"));
@@ -212,6 +210,7 @@ public class CinemaServiceTest {
 
 	@Test
 	public void testFindCarteleraSuccess() throws Exception {
+		//Datos para la base de datos
 
 		Movie movie1 = addMovie("Batman", 150);
 		Room room1 = addRoom("Sala VIP", 20);
@@ -219,10 +218,10 @@ public class CinemaServiceTest {
 		Movie movie2 = addMovie("Cumbres Borrascosas", 90);
 		Room room2 = addRoom("Sala 14", 60);
 
-		// Sesiones para hoy
+		// Sesiones para hoy (deben ser posteriores a LocalDateTime.now() porque la cartelera
+		// de hoy filtra desde "ahora"; horarios tardíos evitan fallos según la hora del test).
 		LocalDateTime hoySesion1 = LocalDate.now().atTime(23, 54).withNano(0);
 		LocalDateTime hoySesion2 = LocalDate.now().atTime(23, 55).withNano(0);
-		//Al usar at.Time, dependiendo de la hora que se pruebe pasa el test o no
 
 		// Sesiones para mañana
 		LocalDate mananaDate = LocalDate.now().plusDays(1);
@@ -281,6 +280,8 @@ public class CinemaServiceTest {
 		});
 	}
 
+
+
 	@Test
 	public void testFindPurchasesNonExistentUser() {
 		assertThrows(InstanceNotFoundException.class,
@@ -313,42 +314,7 @@ public class CinemaServiceTest {
 		assertFalse(block.getExistMoreItems());
 	}
 
-	@Test
-	public void testFindPurchaseNonExistent() throws Exception {
-		User user = createAndSignUpUser("viewerFindPurchase");
-		assertThrows(InstanceNotFoundException.class,
-				() -> cinemaService.findPurchase(user.getId(), NON_EXISTENT_ID));
-	}
-
-	@Test
-	public void testFindPurchaseNotBelongsToUser() throws Exception {
-		User user1 = createAndSignUpUser("viewerA");
-		User user2 = createAndSignUpUser("viewerB");
-		Movie movie = addMovie("Matrix", 136);
-		Room room = addRoom("Sala 2", 15);
-		Session session = addSession(movie, room, LocalDateTime.now().plusDays(1), "7.50");
-		Purchase purchase = cinemaService.buyTickets(user1.getId(), session.getId(), 1, "5555-5555-5555-5555");
-
-		assertThrows(PermissionException.class,
-				() -> cinemaService.findPurchase(user2.getId(), purchase.getId()));
-	}
-
-	@Test
-	public void testFindPurchaseSuccess() throws Exception {
-		User user = createAndSignUpUser("viewerFindSuccess");
-		Movie movie = addMovie("Inception", 148);
-		Room room = addRoom("Sala 3", 30);
-		Session session = addSession(movie, room, LocalDateTime.now().plusDays(2), "9.00");
-		Purchase purchase = cinemaService.buyTickets(user.getId(), session.getId(), 3, "1234-5678-9012-3456");
-
-		Purchase found = cinemaService.findPurchase(user.getId(), purchase.getId());
-
-		assertNotNull(found);
-		assertEquals(purchase.getId(), found.getId());
-		assertEquals("Inception", found.getSession().getMovie().getTitle());
-		assertEquals(3, found.getNumTickets());
-		assertFalse(found.isDelivered());
-	}
+	// --- FUNC-6: entregar las entradas de una compra ---
 
 	@Test
 	public void testDeliverTicketsNonExistentPurchase() {
@@ -406,7 +372,7 @@ public class CinemaServiceTest {
 
 		cinemaService.deliverTickets(purchase.getId(), "1111-2222-3333-4444");
 
-		Purchase found = cinemaService.findPurchase(user.getId(), purchase.getId());
+		Purchase found = purchaseDao.findById(purchase.getId()).get();
 		assertTrue(found.isDelivered());
 	}
 }

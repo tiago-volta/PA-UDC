@@ -3,16 +3,21 @@ package es.udc.paproject.backend.rest.dtos;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import es.udc.paproject.backend.model.services.MovieSessions;
+import es.udc.paproject.backend.model.entities.MovieSessions;
 
 public class MovieSessionsConversor {
 
     private MovieSessionsConversor() {}
 
     public final static MovieSessionsDto toMovieSessionsDto(MovieSessions movieSessions) {
+        List<BillboardSessionDto> sessionDtos = movieSessions.getSessions().stream()
+                .map(s -> new BillboardSessionDto(s.getId(), s.getDate()))
+                .sorted(Comparator.comparing(BillboardSessionDto::getDate))
+                .collect(Collectors.toList());
+
         return new MovieSessionsDto(
                 MovieConversor.toMovieSummaryDto(movieSessions.getMovie()),
-                SessionConversor.toSessionDtos(movieSessions.getSessions())
+                sessionDtos
         );
     }
 
@@ -21,7 +26,6 @@ public class MovieSessionsConversor {
                 .map(ms -> toMovieSessionsDto(ms))
                 .collect(Collectors.toList());
 
-        //Ordenamos por título
         items.sort(Comparator.comparing(dto -> dto.getMovie().getTitle()));
 
         return items;

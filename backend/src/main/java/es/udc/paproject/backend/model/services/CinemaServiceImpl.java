@@ -1,104 +1,47 @@
 package es.udc.paproject.backend.model.services;
 
-import es.udc.paproject.backend.model.entities.*;
-import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
-import es.udc.paproject.backend.model.exceptions.InvalidDateException;
-import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
-import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
-import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
-import es.udc.paproject.backend.model.exceptions.PermissionException;
-import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import es.udc.paproject.backend.model.entities.Movie;
+import es.udc.paproject.backend.model.entities.MovieDao;
+import es.udc.paproject.backend.model.entities.MovieSessions;
+import es.udc.paproject.backend.model.entities.Purchase;
+import es.udc.paproject.backend.model.entities.PurchaseDao;
+import es.udc.paproject.backend.model.entities.Session;
+import es.udc.paproject.backend.model.entities.SessionDao;
+import es.udc.paproject.backend.model.entities.User;
+import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
+import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
+import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
+import es.udc.paproject.backend.model.exceptions.InvalidDateException;
+import es.udc.paproject.backend.model.exceptions.NotEnoughSeatsException;
+import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class CinemaServiceImpl implements CinemaService {
 
-    @Autowired
-    private SessionDao sessionDao;
-    @Autowired
-    private MovieDao movieDao;
-    @Autowired
-    private PurchaseDao purchaseDao;
-    @Autowired
-    private PermissionChecker permissionChecker;
+	@Autowired
+	private PermissionChecker permissionChecker;
 
-    //Funcionalidad 1
-    @Override
-    @Transactional(readOnly = true)
-    public List<MovieSessions> findCartelera(LocalDate date) throws InvalidDateException {
+	@Autowired
+	private SessionDao sessionDao;
 
-        if (date == null) {
-            throw new InvalidDateException(date);
-        }
+	@Autowired
+	private PurchaseDao purchaseDao;
 
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now().withNano(0);
-
-        if (date.isBefore(today) || date.isAfter(today.plusDays(6))) {
-            throw new InvalidDateException(date);
-        }
-
-        LocalDateTime start;
-
-        if (date.equals(today)) {
-            start = now;
-        } else {
-            start = date.atStartOfDay();
-        }
-
-        LocalDateTime end = date.atTime(23, 59, 59);
-
-        List<Session> sessions = sessionDao.findSessionsByDate(start, end);
-
-        List<MovieSessions> cartelera = new ArrayList<>();
-        Movie currentMovie = null;
-        List<Session> currentMovieSessions = new ArrayList<>();
-
-        for (Session s : sessions) {
-            if (currentMovie != null && !s.getMovie().getId().equals(currentMovie.getId())) {
-                cartelera.add(new MovieSessions(currentMovie, currentMovieSessions));
-                currentMovieSessions = new ArrayList<>();
-            }
-            currentMovieSessions.add(s);
-            currentMovie = s.getMovie();
-        }
-
-        // Añadir último grupo
-        if (currentMovie != null) {
-            cartelera.add(new MovieSessions(currentMovie, currentMovieSessions));
-        }
-
-        return cartelera;
-    }
-
-	//Funcionalidad 2
-    @Override
-    @Transactional(readOnly = true)
-    public Movie findMovieById(Long id) throws InstanceNotFoundException {
-
-        Optional<Movie> movie = movieDao.findById(id);
-
-        if (!movie.isPresent()) {
-            throw new InstanceNotFoundException("project.entities.movie", id);
-        }
-
-        return movie.get();
-
-    }
+	@Autowired
+	private MovieDao movieDao;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -151,14 +94,78 @@ public class CinemaServiceImpl implements CinemaService {
 		return purchaseDao.save(purchase);
 	}
 
-	/**
-	 * FUNC-5: histórico de compras de un usuario.
-	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<MovieSessions> findCartelera(LocalDate date) throws InvalidDateException {
+
+		if (date == null) {
+			throw new InvalidDateException(date);
+		}
+
+		LocalDate today = LocalDate.now();
+		LocalDateTime now = LocalDateTime.now().withNano(0);
+
+		// Validación de rango: hoy hasta hoy + 6 días
+		if (date.isBefore(today) || date.isAfter(today.plusDays(6))) {
+			throw new InvalidDateException(date);
+		}
+
+		LocalDateTime start;
+
+		if (date.equals(today)) {
+			start = now;
+		} else {
+			start = date.atStartOfDay();
+		}
+
+		// Fin del día
+		LocalDateTime end = date.atTime(23, 59, 59);
+
+		// Consulta al DAO
+		List<Session> sessions = sessionDao.findSessionsByDate(start, end);
+
+		List<MovieSessions> cartelera = new ArrayList<>();
+		Movie currentMovie = null;
+		List<Session> currentMovieSessions = new ArrayList<>();
+
+		for (Session s : sessions) {
+
+			if (currentMovie != null && !s.getMovie().equals(currentMovie)) {
+				cartelera.add(new MovieSessions(currentMovie, currentMovieSessions));
+				currentMovieSessions = new ArrayList<>();
+			}
+
+			currentMovieSessions.add(s);
+			currentMovie = s.getMovie();
+		}
+
+		// Añadir último grupo
+		if (currentMovie != null) {
+			cartelera.add(new MovieSessions(currentMovie, currentMovieSessions));
+		}
+
+		return cartelera;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Movie findMovieById(Long id) throws InstanceNotFoundException {
+
+		Optional<Movie> movie = movieDao.findById(id);
+
+		if (!movie.isPresent()) {
+			throw new InstanceNotFoundException("project.entities.movie", id);
+		}
+
+		return movie.get();
+
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public Block<Purchase> findPurchases(Long userId, int page, int size) throws InstanceNotFoundException {
 
-		// Validación de existencia del usuario y permiso (sin validaciones de formato).
+		// Nos aseguramos de que el usuario exista
 		permissionChecker.checkUser(userId);
 
 		Pageable pageable = PageRequest.of(page, size);
@@ -167,37 +174,10 @@ public class CinemaServiceImpl implements CinemaService {
 		return new Block<>(slice.getContent(), slice.hasNext());
 	}
 
-	/**
-	 * FUNC-5: detalle de una compra de un usuario.
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Purchase findPurchase(Long userId, Long purchaseId)
-			throws InstanceNotFoundException, PermissionException {
-
-		Optional<Purchase> purchaseOpt = purchaseDao.findById(purchaseId);
-
-		if (!purchaseOpt.isPresent()) {
-			throw new InstanceNotFoundException("project.entities.purchase", purchaseId);
-		}
-
-		Purchase purchase = purchaseOpt.get();
-
-		// Solo el dueño de la compra puede verla.
-		if (!purchase.getUser().getId().equals(userId)) {
-			throw new PermissionException();
-		}
-
-		return purchase;
-	}
-
-	/**
-	 * FUNC-6: entregar entradas de una compra.
-	 */
 	@Override
 	public void deliverTickets(Long purchaseId, String bankCard)
 			throws InstanceNotFoundException, IncorrectCreditCardException,
-					AlreadyDeliveredException, SessionAlreadyStartedException {
+			AlreadyDeliveredException, SessionAlreadyStartedException {
 
 		Optional<Purchase> purchaseOpt = purchaseDao.findById(purchaseId);
 

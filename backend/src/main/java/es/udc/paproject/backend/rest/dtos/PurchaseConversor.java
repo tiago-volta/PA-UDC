@@ -13,19 +13,6 @@ public class PurchaseConversor {
 		return purchases.stream().map(PurchaseConversor::toPurchaseSummaryDto).collect(Collectors.toList());
 	}
 
-	public static PurchaseDto toPurchaseDto(Purchase purchase) {
-		return new PurchaseDto(
-			purchase.getId(),
-			purchase.getPurchaseDate(),
-			purchase.getSession().getMovie().getTitle(),
-			purchase.getNumTickets(),
-			purchase.getTotalPrice(),
-			purchase.getSession().getDate(),
-			purchase.getSession().getRoom().getName(),
-			purchase.getSession().getId(),
-			purchase.isDelivered());
-	}
-
 	private static PurchaseSummaryDto toPurchaseSummaryDto(Purchase purchase) {
 		return new PurchaseSummaryDto(
 			purchase.getId(),

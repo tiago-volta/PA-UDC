@@ -4,12 +4,12 @@ import java.util.List;
 
 public class MovieSessionsDto {
 
-    private MovieSummaryDto movie; // Usamos el resumen (solo ID y Título)
-    private List<SessionDto> sessions; // Lista de DTOs de sesión
+    private MovieSummaryDto movie;
+    private List<BillboardSessionDto> sessions;
 
     public MovieSessionsDto() {}
 
-    public MovieSessionsDto(MovieSummaryDto movie, List<SessionDto> sessions) {
+    public MovieSessionsDto(MovieSummaryDto movie, List<BillboardSessionDto> sessions) {
         this.movie = movie;
         this.sessions = sessions;
     }
@@ -22,11 +22,11 @@ public class MovieSessionsDto {
         this.movie = movie;
     }
 
-    public List<SessionDto> getSessions() {
+    public List<BillboardSessionDto> getSessions() {
         return sessions;
     }
 
-    public void setSessions(List<SessionDto> sessions) {
+    public void setSessions(List<BillboardSessionDto> sessions) {
         this.sessions = sessions;
     }
 }

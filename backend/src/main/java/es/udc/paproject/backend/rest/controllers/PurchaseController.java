@@ -1,6 +1,5 @@
 package es.udc.paproject.backend.rest.controllers;
 
-import static es.udc.paproject.backend.rest.dtos.PurchaseConversor.toPurchaseDto;
 import static es.udc.paproject.backend.rest.dtos.PurchaseConversor.toPurchaseSummaryDtos;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +20,11 @@ import es.udc.paproject.backend.model.entities.Purchase;
 import es.udc.paproject.backend.model.exceptions.AlreadyDeliveredException;
 import es.udc.paproject.backend.model.exceptions.IncorrectCreditCardException;
 import es.udc.paproject.backend.model.exceptions.InstanceNotFoundException;
-import es.udc.paproject.backend.model.exceptions.PermissionException;
 import es.udc.paproject.backend.model.exceptions.SessionAlreadyStartedException;
 import es.udc.paproject.backend.model.services.Block;
 import es.udc.paproject.backend.model.services.CinemaService;
 import es.udc.paproject.backend.rest.dtos.BlockDto;
 import es.udc.paproject.backend.rest.dtos.DeliverTicketsParamsDto;
-import es.udc.paproject.backend.rest.dtos.PurchaseDto;
 import es.udc.paproject.backend.rest.dtos.PurchaseSummaryDto;
 
 @RestController
@@ -46,15 +43,6 @@ public class PurchaseController {
 		return new BlockDto<>(toPurchaseSummaryDtos(block.getItems()), block.getExistMoreItems());
 	}
 
-	@GetMapping("/{purchaseId}")
-	@Transactional(readOnly = true)
-	public PurchaseDto findPurchase(@RequestAttribute Long userId, @PathVariable Long purchaseId)
-			throws InstanceNotFoundException, PermissionException {
-
-		Purchase purchase = cinemaService.findPurchase(userId, purchaseId);
-		return toPurchaseDto(purchase);
-	}
-
 	@PostMapping("/{purchaseId}/deliver")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deliverTickets(@PathVariable Long purchaseId,
@@ -65,4 +53,3 @@ public class PurchaseController {
 		cinemaService.deliverTickets(purchaseId, params.getBankCard());
 	}
 }
-
