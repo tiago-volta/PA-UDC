@@ -72,8 +72,11 @@ export const appFetch = async (method, path, body) => {
 
        return appFetchResponse;
 
-    } catch { 
-        networkErrorCallback();
+    } catch {
+        if (networkErrorCallback) {
+            networkErrorCallback();
+        }
+        return {ok: false, payload: null};
     }
 
 }

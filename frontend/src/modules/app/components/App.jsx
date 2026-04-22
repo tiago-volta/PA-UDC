@@ -33,11 +33,10 @@ const App = () => {
 
         const getBillboard = async () => {
             const response = await backend.catalogService.getBillboard(today);
-            if (response.ok){
-                dispatch (catalog.actions.getBillboardCompleted(response.payload));
+            if (response.ok) {
+                dispatch(catalog.actions.getBillboardCompleted(response.payload));
             }
         }
-
         tryLoginFromServiceToken();
         getBillboard();
 
