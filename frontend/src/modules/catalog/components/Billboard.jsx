@@ -1,4 +1,5 @@
 import {useSelector, useDispatch} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import Movies from './Movies';
 import * as selectors from '../selectors';
@@ -22,12 +23,15 @@ const Billboard = () => {
 
     return (
         <div>
-            <DateSelector
-                id="billboardDate"
-                className="mb-2 w-auto"
-                value={billboardDate}
-                onChange={e => handleBillboardDateChange(e.target.value)}
-            />
+            <div className="d-flex align-items-center gap-2 mb-3">
+                <FormattedMessage id='project.global.fields.date'/>
+                <DateSelector
+                    id="billboardDate"
+                    className="w-auto"
+                    value={billboardDate}
+                    onChange={e => handleBillboardDateChange(e.target.value)}
+                />
+            </div>
             <Movies movies={movies}/>
         </div>
     );

@@ -1,4 +1,6 @@
-import Table from "react-bootstrap/Table";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import {FormattedMessage, useIntl} from "react-intl";
 
@@ -21,38 +23,35 @@ const Movies = ({movies}) => {
 
     return (
 
-        <Table striped hover>
+        <Row xs={1} md={2} lg={3} className="g-3">  {/* contenedor de filas: móviles: 1 columna, tablet: 2 columnas, ordenador: 3 columnas */}
+            {movies.map(item => (
+                <Col key={item.movie.id}>
+                    <Card className="h-100 border-dark">
 
-            <thead>
-                <tr>
-                    <th>
-                        <FormattedMessage id='project.catalog.Movies.movie'/>
-                    </th>
-                    <th>
-                        <FormattedMessage id='project.catalog.Movies.sessions'/>
-                    </th>
-                </tr>
-            </thead>
+                        <Card.Header className="bg-light fw-semibold">
+                            {item.movie.title}
+                        </Card.Header>
 
-            <tbody>
-                {movies.map(item => (
-                    <tr key={item.movie.id}>
-                        <td>{item.movie.title}</td>
-                        <td>
-                            {item.sessions.map(session => (
-                                <span key={session.id} className="me-2">
-                                    {intl.formatDate(new Date(session.date), {
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}
-                                </span>
-                            ))}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
+                        <Card.Body>
+                            <div className="d-flex flex-wrap gap-2">
+                                {item.sessions.map(session => (
+                                    <span
+                                        key={session.id}
+                                        className="badge bg-light text-dark border border-secondary rounded-pill px-3 py-2"
+                                    >
+                                        {intl.formatDate(new Date(session.date), {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </span>
+                                ))}
+                            </div>
+                        </Card.Body>
 
-        </Table>
+                    </Card>
+                </Col>
+            ))}
+        </Row>
 
     );
 }
