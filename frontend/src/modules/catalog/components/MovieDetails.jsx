@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams} from 'react-router';
+import {FormattedMessage} from 'react-intl';
 import backend from '../../../backend';
 import BackLink from '../../common/components/BackLink';
 
@@ -7,7 +8,7 @@ const MovieDetails = () => {
 
     const [movie, setMovie] = useState(null);
     const {id} = useParams();
-    const movieId = Number(id); //
+    const movieId = Number(id);
 
     useEffect(() => {
         const findMovieById = async movieId => {
@@ -35,8 +36,19 @@ const MovieDetails = () => {
         <div>
             <BackLink />
             <h2 id="movie-details-title">{movie.title}</h2>
-            <p id="movie-details-summary"><strong>Sinopsis:</strong> {movie.summary}</p>
-            <p id="movie-details-runtime"><strong>Duración:</strong> {movie.runtime} minutos</p>
+            <p id="movie-details-summary">
+                <strong>
+                    <FormattedMessage id='project.catalog.MovieDetails.summary'/>
+                </strong>{' '}
+                {movie.summary}
+            </p>
+            <p id="movie-details-runtime">
+                <strong>
+                    <FormattedMessage id='project.catalog.MovieDetails.runtime'/>
+                </strong>{' '}
+                {movie.runtime}{' '}
+                <FormattedMessage id='project.catalog.MovieDetails.minutes'/>
+            </p>
         </div>
     );
 }

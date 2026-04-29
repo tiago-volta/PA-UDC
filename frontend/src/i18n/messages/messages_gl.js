@@ -40,4 +40,7 @@ export default {
     'project.catalog.Movies.noMoviesFound': 'Non se atoparon películas',
     'project.catalog.Movies.movie': 'Película',
     'project.catalog.Movies.sessions': 'Sesións',
+    'project.catalog.MovieDetails.summary': 'Sinopse:',
+    'project.catalog.MovieDetails.runtime': 'Duración:',
+    'project.catalog.MovieDetails.minutes': 'minutos',
 }

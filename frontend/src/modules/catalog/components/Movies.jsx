@@ -2,8 +2,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
-import {Link} from 'react-router-dom';
 import {FormattedMessage, useIntl} from "react-intl";
+import MovieLink from "./MovieLink";
 
 
 const Movies = ({movies}) => {
@@ -30,10 +30,7 @@ const Movies = ({movies}) => {
                     <Card className="h-100 border-dark">
 
                         <Card.Header className="bg-light fw-semibold">
-                            {/* El "to" debe coincidir con la ruta de tu Body.jsx */}
-                            <Link to={`/catalog/movie-details/${item.movie.id}`}>
-                                {item.movie.title}
-                            </Link>
+                            <MovieLink id={item.movie.id} title={item.movie.title}/>
                         </Card.Header>
 
                         <Card.Body>

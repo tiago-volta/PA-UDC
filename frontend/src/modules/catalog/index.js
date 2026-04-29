@@ -5,6 +5,5 @@ import * as selectors from './selectors';
 
 export {default as Billboard} from './components/Billboard';
 export {default as MovieDetails} from './components/MovieDetails';
-export {default as MovieLink} from './components/MovieLink'
 
 export default {actions, actionTypes, reducer, selectors};

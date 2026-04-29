@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {Route, Routes} from 'react-router';
 import Container from 'react-bootstrap/Container';
-import MovieDetails from '../../catalog/components/MovieDetails';
+import {MovieDetails} from '../../catalog';
 
 import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';

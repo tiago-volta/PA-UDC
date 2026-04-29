@@ -1,9 +1,8 @@
-import {Link} from 'react-router-dom';
+import {Link} from 'react-router';
 
 const MovieLink = ({id, title}) => {
     return (
         <Link to={`/catalog/movie-details/${id}`}>
-            {/*No estoy 100% de que la ruta sea esta*/}
             {title}
         </Link>
     );
