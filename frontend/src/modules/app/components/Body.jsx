@@ -1,6 +1,7 @@
 import {useSelector} from 'react-redux';
 import {Route, Routes} from 'react-router';
 import Container from 'react-bootstrap/Container';
+import MovieDetails from '../../catalog/components/MovieDetails';
 
 import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';
@@ -16,7 +17,8 @@ const Body = () => {
        <Container className="my-4 justify-content-center flex-grow-1">
             <AppGlobalComponents/>
             <Routes>
-                <Route path="/*" element={<Home/>}/>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/catalog/movie-details/:id" element={<MovieDetails/>}/>
                 {loggedIn && <Route path="/users/update-profile" element={<UpdateProfile/>}/>}
                 {loggedIn && <Route path="/users/change-password" element={<ChangePassword/>}/>}
                 {loggedIn && <Route path="/users/logout" element={<Logout/>}/>}
