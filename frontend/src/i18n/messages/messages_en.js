@@ -7,6 +7,8 @@ export default {
     'project.app.Home.welcome': 'Billboard — PA Cinema',
 
     'project.common.ErrorDialog.title': 'Error',
+    'project.common.PageNotFound.title': 'Page not found',
+    'project.common.PageNotFound.message': 'You can go back to',
 
     'project.global.buttons.cancel': 'Cancel',
     'project.global.buttons.close': 'Close',

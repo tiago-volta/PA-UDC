@@ -2,6 +2,7 @@ import {useSelector} from 'react-redux';
 import {Route, Routes} from 'react-router';
 import Container from 'react-bootstrap/Container';
 import {MovieDetails, SessionDetails} from '../../catalog';
+import {PageNotFound} from '../../common';
 
 import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';
@@ -25,6 +26,7 @@ const Body = () => {
                 {loggedIn && <Route path="/users/logout" element={<Logout/>}/>}
                 {!loggedIn && <Route path="/users/login" element={<Login/>}/>}
                 {!loggedIn && <Route path="/users/signup" element={<SignUp/>}/>}
+                <Route path="/*" element={<PageNotFound/>}/>
             </Routes>
        </Container>
 

@@ -7,6 +7,8 @@ export default {
     'project.app.Home.welcome': 'Cartelera — PA Cinema',
     
     'project.common.ErrorDialog.title': 'Error',
+    'project.common.PageNotFound.title': 'Página no encontrada',
+    'project.common.PageNotFound.message': 'Puedes volver a',
 
     'project.global.buttons.cancel': 'Cancelar',
     'project.global.buttons.close': 'Cerrar',
