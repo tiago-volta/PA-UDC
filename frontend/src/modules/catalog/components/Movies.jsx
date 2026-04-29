@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import {FormattedMessage, useIntl} from "react-intl";
 import MovieLink from "./MovieLink";
+import {Link} from 'react-router';
 
 
 const Movies = ({movies}) => {
@@ -27,7 +28,7 @@ const Movies = ({movies}) => {
         <Row xs={1} md={2} lg={3} className="g-3">  {/* contenedor de filas: móviles: 1 columna, tablet: 2 columnas, ordenador: 3 columnas */}
             {movies.map(item => (
                 <Col key={item.movie.id}>
-                    <Card className="h-100 border-dark">
+                    <Card className="h-100 border-dark shadow-sm">
 
                         <Card.Header className="bg-light fw-semibold">
                             <MovieLink id={item.movie.id} title={item.movie.title}/>
@@ -38,12 +39,14 @@ const Movies = ({movies}) => {
                                 {item.sessions.map(session => (
                                     <span
                                         key={session.id}
-                                        className="badge bg-light text-dark border border-secondary rounded-pill px-3 py-2"
+                                        className="badge bg-light border border-secondary rounded-pill px-3 py-2"
                                     >
-                                        {intl.formatDate(new Date(session.date), {
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
+                                        <Link to={`/catalog/session-details/${session.id}`}>
+                                            {intl.formatDate(new Date(session.date), {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </Link>
                                     </span>
                                 ))}
                             </div>

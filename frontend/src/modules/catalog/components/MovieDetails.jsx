@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {useParams} from 'react-router';
 import {FormattedMessage} from 'react-intl';
+import Card from 'react-bootstrap/Card';
 import backend from '../../../backend';
 import BackLink from '../../common/components/BackLink';
 
@@ -35,20 +36,26 @@ const MovieDetails = () => {
     return (
         <div>
             <BackLink />
-            <h2 id="movie-details-title">{movie.title}</h2>
-            <p id="movie-details-summary">
-                <strong>
-                    <FormattedMessage id='project.catalog.MovieDetails.summary'/>
-                </strong>{' '}
-                {movie.summary}
-            </p>
-            <p id="movie-details-runtime">
-                <strong>
-                    <FormattedMessage id='project.catalog.MovieDetails.runtime'/>
-                </strong>{' '}
-                {movie.runtime}{' '}
-                <FormattedMessage id='project.catalog.MovieDetails.minutes'/>
-            </p>
+            <Card className="mt-3 shadow-sm mx-auto" style={{maxWidth: '44rem'}}>
+                <Card.Body className="p-4">
+                    <Card.Title id="movie-details-title" className="fs-4 text-center mb-4">
+                        {movie.title}
+                    </Card.Title>
+                    <Card.Text id="movie-details-summary">
+                        <span className="text-muted fw-semibold">
+                            <FormattedMessage id='project.catalog.MovieDetails.summary'/>
+                        </span>{' '}
+                        {movie.summary}
+                    </Card.Text>
+                    <Card.Text id="movie-details-runtime">
+                        <span className="text-muted fw-semibold">
+                            <FormattedMessage id='project.catalog.MovieDetails.runtime'/>
+                        </span>{' '}
+                        {movie.runtime}{' '}
+                        <FormattedMessage id='project.catalog.MovieDetails.minutes'/>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
         </div>
     );
 }

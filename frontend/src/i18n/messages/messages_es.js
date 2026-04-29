@@ -43,5 +43,9 @@ export default {
     'project.catalog.MovieDetails.summary': 'Sinopsis:',
     'project.catalog.MovieDetails.runtime': 'Duración:',
     'project.catalog.MovieDetails.minutes': 'minutos',
-
+    'project.catalog.SessionDetails.date': 'Fecha:',
+    'project.catalog.SessionDetails.runtime': 'Duración:',
+    'project.catalog.SessionDetails.price': 'Precio:',
+    'project.catalog.SessionDetails.room': 'Sala:',
+    'project.catalog.SessionDetails.freeSeats': 'Asientos libres:'
 }
