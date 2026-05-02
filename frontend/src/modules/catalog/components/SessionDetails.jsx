@@ -2,14 +2,22 @@ import {useState, useEffect} from 'react';
 import {useParams} from 'react-router';
 import {FormattedMessage, FormattedNumber, FormattedDate, FormattedTime} from 'react-intl';
 import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import backend from '../../../backend';
 import BackLink from '../../common/components/BackLink';
 import MovieLink from './MovieLink';
+import users from '../../users';
+import {useSelector} from 'react-redux';
+import {BuyForm} from '../../shopping';
 
 const SessionDetails = () => {
     const [session, setSession] = useState(null);
     const {id} = useParams();
     const sessionId = Number(id);
+    const loggedIn = useSelector(users.selectors.isLoggedIn);
+    const userRole = useSelector(users.selectors.getUserRole);
+    const canBuyTickets = loggedIn && userRole === 'SPECTATOR' && session?.freeSeats > 0;
 
     useEffect(() => {
         const findSessionById = async sessionId => {
@@ -26,46 +34,59 @@ const SessionDetails = () => {
 
     }, [sessionId]);
 
-    //Si la respuesta del backend todavía no llegó
     if (!session) {
-        return null; //No se renderiza nada
+        return null;
     }
+
     return (
         <div>
             <BackLink />
             <Card className="mt-3 shadow-sm mx-auto" style={{maxWidth: '44rem'}}>
                 <Card.Body className="p-4">
-                    <Card.Title id="session-details-title" className="fs-4 text-center">
+                    <Card.Title id="session-details-title" className="fs-4 text-center mb-2">
                         <MovieLink id={session.movieId} title={session.movieTitle}/>
                     </Card.Title>
                     <Card.Subtitle id="session-details-date" className="text-muted mb-4 text-center">
                         <FormattedDate value={new Date(session.date)}/> - <FormattedTime value={new Date(session.date)}/>
                     </Card.Subtitle>
-                    <Card.Text id="session-details-runtime">
-                        <span className="text-muted fw-semibold">
+                        
+                    <Row className="mb-3">
+                        <Col md={3} className="text-muted fw-semibold">
                             <FormattedMessage id='project.catalog.SessionDetails.runtime'/>
-                        </span>{' '}
-                        {session.movieRuntime}{' '}
-                        <FormattedMessage id='project.catalog.MovieDetails.minutes'/>
-                    </Card.Text>
-                    <Card.Text id="session-details-price">
-                        <span className="text-muted fw-semibold">
+                        </Col>
+                        <Col md={6} id="session-details-runtime">
+                            {session.movieRuntime}{' '}
+                            <FormattedMessage id='project.catalog.MovieDetails.minutes'/>
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col md={3} className="text-muted fw-semibold">
                             <FormattedMessage id='project.catalog.SessionDetails.price'/>
-                        </span>{' '}
-                        <FormattedNumber value={session.price} style="currency" currency="EUR"/>
-                    </Card.Text>
-                    <Card.Text id="session-details-room">
-                        <span className="text-muted fw-semibold">
+                        </Col>
+                        <Col md={6} id="session-details-price">
+                            <FormattedNumber value={session.price} style="currency" currency="EUR"/>
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col md={3} className="text-muted fw-semibold">
                             <FormattedMessage id='project.catalog.SessionDetails.room'/>
-                        </span>{' '}
-                        {session.roomName}
-                    </Card.Text>
-                    <Card.Text id="session-details-free-seats">
-                        <span className="text-muted fw-semibold">
+                        </Col>
+                        <Col md={6} id="session-details-room">
+                            {session.roomName}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col md={3} className="text-muted fw-semibold">
                             <FormattedMessage id='project.catalog.SessionDetails.freeSeats'/>
-                        </span>{' '}
-                        {session.freeSeats}
-                    </Card.Text>
+                        </Col>
+                        <Col md={6} id="session-details-free-seats">
+                            {session.freeSeats}
+                        </Col>
+                    </Row>
+
+                    {canBuyTickets &&
+                        <BuyForm sessionId={session.id} />
+                    }
                 </Card.Body>
             </Card>
         </div>

@@ -6,3 +6,9 @@ export const findMovieById = async id =>
     await appFetch('GET', `/catalog/movies/${id}`);
 export const findSessionById = async id =>
     await appFetch('GET', `/catalog/sessions/${id}`);
+export const buyTickets = async (userId, sessionId, numTickets, bankCard) =>
+    await appFetch('POST', `/catalog/sessions/${sessionId}/buyTickets`, {
+        userId,
+        numTickets,
+        bankCard
+    });

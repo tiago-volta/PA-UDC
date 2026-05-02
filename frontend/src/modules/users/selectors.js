@@ -9,5 +9,9 @@ export const isLoggedIn = state =>
 export const getUserName = state => 
     isLoggedIn(state) ? getUser(state).userName : null;
 
+export const getUserRole = state =>
+    isLoggedIn(state) ? getUser(state).role : null;
 
+export const getUserId = state =>
+    isLoggedIn(state) ? getUser(state).id : null;
 
