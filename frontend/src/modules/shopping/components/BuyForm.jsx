@@ -17,7 +17,7 @@ const BuyForm = ({sessionId}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [numTickets, setNumTickets] = useState('');
+    const [numTickets, setNumTickets] = useState(1);
     const [bankCard, setBankCard] = useState('');
     const [formValidated, setFormValidated] = useState(false);
     const [backendErrors, setBackendErrors] = useState(null);
@@ -30,7 +30,7 @@ const BuyForm = ({sessionId}) => {
 
         if (form.checkValidity()) {
 
-            const response = await backend.catalogService.buyTickets(userId, sessionId, Number(numTickets), bankCard);
+            const response = await backend.catalogService.buyTickets(userId, sessionId, numTickets, bankCard);
 
             if (response.ok) {
                 dispatch(actions.buyCompleted(response.payload));
@@ -65,11 +65,12 @@ const BuyForm = ({sessionId}) => {
                         <Col md={6}>
                             <Form.Control type="number"
                                 value={numTickets}
-                                onChange={e => setNumTickets(e.target.value)}
+                                onChange={e => setNumTickets(Number(e.target.value))}
                                 autoFocus
-                                required/>
+                                min={1}
+                                max={10}/>
                             <Form.Control.Feedback type="invalid">
-                                <FormattedMessage id='project.global.validator.required'/>
+                                <FormattedMessage id='project.shopping.BuyForm.numTickets.error'/>
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
