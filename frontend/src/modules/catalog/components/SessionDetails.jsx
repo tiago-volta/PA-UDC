@@ -10,9 +10,11 @@ import MovieLink from './MovieLink';
 import users from '../../users';
 import {useSelector} from 'react-redux';
 import {BuyForm} from '../../shopping';
+import {Errors} from "../../common/index.js";
 
 const SessionDetails = () => {
     const [session, setSession] = useState(null);
+    const [backendErrors, setBackendErrors] = useState(null); //Errores del backend
     const {id} = useParams();
     const sessionId = Number(id);
     const loggedIn = useSelector(users.selectors.isLoggedIn);
@@ -27,6 +29,9 @@ const SessionDetails = () => {
                 if (response.ok) {
                     setSession(response.payload);
                 }
+                else{
+                    setBackendErrors(response.payload);
+                }
             }
         };
 
@@ -34,12 +39,17 @@ const SessionDetails = () => {
 
     }, [sessionId]);
 
+    //¿Esto está bien? Si no hay sesión ni errores, no se muestra nada.
     if (!session) {
-        return null;
+        return (
+            <Errors errors={backendErrors} onClose={() => setBackendErrors(null)}/>
+        );
     }
 
     return (
         <div>
+            <Errors errors={backendErrors}
+                    onClose={() => setBackendErrors(null)}/>
             <BackLink />
             <Card className="mt-3 shadow-sm mx-auto" style={{maxWidth: '44rem'}}>
                 <Card.Body className="p-4">
