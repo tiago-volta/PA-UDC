@@ -37,6 +37,11 @@ const Header = () => {
                                         <FormattedMessage id="project.shopping.PurchaseHistory.title"/>
                                     </NavDropdown.Item>
                                 }
+                                {userRole === 'TICKET_SELLER' &&
+                                    <NavDropdown.Item as={Link} to="/shopping/deliver-tickets">
+                                        <FormattedMessage id="project.shopping.DeliverTickets.title"/>
+                                    </NavDropdown.Item>
+                                }
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item as={Link} to="/users/logout">
                                     <FormattedMessage id="project.app.Header.logout"/>

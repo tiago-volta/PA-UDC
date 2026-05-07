@@ -4,6 +4,7 @@ import reducer from './reducer';
 import * as selectors from './selectors';
 
 export {default as BuyForm} from './components/BuyForm';
+export {default as DeliverTickets} from './components/DeliverTickets';
 export {default as PurchaseCompleted} from './components/PurchaseCompleted';
 export {default as PurchaseHistory} from './components/PurchaseHistory';
 

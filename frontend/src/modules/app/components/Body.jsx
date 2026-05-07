@@ -3,7 +3,7 @@ import {Route, Routes} from 'react-router';
 import Container from 'react-bootstrap/Container';
 import {MovieDetails, SessionDetails} from '../../catalog';
 import {PageNotFound} from '../../common';
-import {PurchaseCompleted, PurchaseHistory} from '../../shopping';
+import {DeliverTickets, PurchaseCompleted, PurchaseHistory} from '../../shopping';
 
 import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';
@@ -30,6 +30,7 @@ const Body = () => {
                 {!loggedIn && <Route path="/users/signup" element={<SignUp/>}/>}
                 {loggedIn && <Route path="/shopping/purchase-completed" element={<PurchaseCompleted/>}/>}
                 {userRole === 'SPECTATOR' && <Route path="/shopping/purchase-history" element={<PurchaseHistory/>}/>}
+                {userRole === 'TICKET_SELLER' && <Route path="/shopping/deliver-tickets" element={<DeliverTickets/>}/>}
                 <Route path="/*" element={<PageNotFound/>}/>
             </Routes>
        </Container>
