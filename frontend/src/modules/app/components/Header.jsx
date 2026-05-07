@@ -11,6 +11,7 @@ import users from '../../users';
 const Header = () => {
 
     const userName = useSelector(users.selectors.getUserName);
+    const userRole = useSelector(users.selectors.getUserRole);
 
     return (
 
@@ -31,6 +32,11 @@ const Header = () => {
                                 <NavDropdown.Item as={Link} to="/users/change-password">
                                     <FormattedMessage id="project.users.ChangePassword.title"/>
                                 </NavDropdown.Item>
+                                {userRole === 'SPECTATOR' &&
+                                    <NavDropdown.Item as={Link} to="/shopping/purchase-history">
+                                        <FormattedMessage id="project.shopping.PurchaseHistory.title"/>
+                                    </NavDropdown.Item>
+                                }
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item as={Link} to="/users/logout">
                                     <FormattedMessage id="project.app.Header.logout"/>

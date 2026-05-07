@@ -3,7 +3,7 @@ import {Route, Routes} from 'react-router';
 import Container from 'react-bootstrap/Container';
 import {MovieDetails, SessionDetails} from '../../catalog';
 import {PageNotFound} from '../../common';
-import {PurchaseCompleted} from '../../shopping';
+import {PurchaseCompleted, PurchaseHistory} from '../../shopping';
 
 import AppGlobalComponents from './AppGlobalComponents';
 import Home from './Home';
@@ -13,6 +13,7 @@ import users from '../../users';
 const Body = () => {
 
     const loggedIn = useSelector(users.selectors.isLoggedIn);
+    const userRole = useSelector(users.selectors.getUserRole);
     
    return (
 
@@ -28,6 +29,7 @@ const Body = () => {
                 {!loggedIn && <Route path="/users/login" element={<Login/>}/>}
                 {!loggedIn && <Route path="/users/signup" element={<SignUp/>}/>}
                 {loggedIn && <Route path="/shopping/purchase-completed" element={<PurchaseCompleted/>}/>}
+                {userRole === 'SPECTATOR' && <Route path="/shopping/purchase-history" element={<PurchaseHistory/>}/>}
                 <Route path="/*" element={<PageNotFound/>}/>
             </Routes>
        </Container>

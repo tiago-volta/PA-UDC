@@ -5,5 +5,6 @@ import * as selectors from './selectors';
 
 export {default as BuyForm} from './components/BuyForm';
 export {default as PurchaseCompleted} from './components/PurchaseCompleted';
+export {default as PurchaseHistory} from './components/PurchaseHistory';
 
 export default {actions, actionTypes, reducer, selectors};
