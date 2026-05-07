@@ -54,8 +54,8 @@
 
                 <!--  Data source properties -->
                 <dataSource.baseUrl>jdbc:mysql://localhost/paproject</dataSource.baseUrl>
-                <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</dataSource.url>
-                <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</testDataSource.url>
+                <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid&amp;characterEncoding=UTF-8</dataSource.url>
+                <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid&amp;characterEncoding=UTF-8</testDataSource.url>
                 <dataSource.createTablesScript>1-MySQLCreateTables.sql</dataSource.createTablesScript>
                 <dataSource.createDataScript>2-MySQLCreateData.sql</dataSource.createDataScript>
             </properties>

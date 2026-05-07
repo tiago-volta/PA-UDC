@@ -2,6 +2,8 @@
 -- Datos iniciales para la base de datos "paproject".
 -- ----------------------------------------------------------------------------
 
+SET NAMES utf8mb4;
+
 -- Usuarios viewer (espectador) y ticketseller (taquillero) con contraseña pa2526.
 -- Role: 0 = SPECTATOR, 1 = TICKET_SELLER (ordinal del enum).
 INSERT INTO User (userName, password, firstName, lastName, email, role) VALUES

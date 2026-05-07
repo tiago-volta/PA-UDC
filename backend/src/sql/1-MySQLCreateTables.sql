@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS Compra;
@@ -10,7 +12,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE User (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    userName VARCHAR(60) COLLATE latin1_bin NOT NULL,
+    userName VARCHAR(60) COLLATE utf8mb4_bin NOT NULL,
     password VARCHAR(60) NOT NULL,
     firstName VARCHAR(60) NOT NULL,
     lastName VARCHAR(60) NOT NULL,
@@ -18,7 +20,7 @@ CREATE TABLE User (
     role TINYINT NOT NULL,
     CONSTRAINT UserPK PRIMARY KEY (id),
     CONSTRAINT UserNameUniqueKey UNIQUE (userName)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE INDEX UserIndexByUserName ON User (userName);
 
@@ -28,14 +30,14 @@ CREATE TABLE Movie (
     summary VARCHAR(1024),
     runtime INT NOT NULL,
     CONSTRAINT MoviePK PRIMARY KEY (id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE Room (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(60) NOT NULL,
     capacity INT NOT NULL,
     CONSTRAINT RoomPK PRIMARY KEY (id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE Session (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -48,7 +50,7 @@ CREATE TABLE Session (
     CONSTRAINT SessionPK PRIMARY KEY (id),
     CONSTRAINT SessionMovieFK FOREIGN KEY (movieId) REFERENCES Movie (id),
     CONSTRAINT SessionRoomFK FOREIGN KEY (roomId) REFERENCES Room (id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE Compra (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -61,4 +63,4 @@ CREATE TABLE Compra (
     CONSTRAINT CompraPK PRIMARY KEY (id),
     CONSTRAINT CompraUserFK FOREIGN KEY (userId) REFERENCES User (id),
     CONSTRAINT CompraSessionFK FOREIGN KEY (sessionId) REFERENCES Session (id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
