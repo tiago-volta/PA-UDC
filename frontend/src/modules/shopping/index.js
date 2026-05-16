@@ -5,6 +5,7 @@ import * as selectors from './selectors';
 
 export {default as BuyForm} from './components/BuyForm';
 export {default as DeliverTickets} from './components/DeliverTickets';
+export {default as DeliverTicketsCompleted} from './components/DeliverTicketsCompleted';
 export {default as PurchaseCompleted} from './components/PurchaseCompleted';
 export {default as PurchaseHistory} from './components/PurchaseHistory';
 

@@ -39,7 +39,6 @@ const SessionDetails = () => {
 
     }, [sessionId]);
 
-    //¿Esto está bien? Si no hay sesión ni errores, no se muestra nada.
     if (!session) {
         return (
             <Errors errors={backendErrors} onClose={() => setBackendErrors(null)}/>

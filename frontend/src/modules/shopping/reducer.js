@@ -3,7 +3,8 @@ import {combineReducers} from 'redux';
 import * as actionTypes from './actionTypes';
 
 const initialState = {
-    lastPurchaseId: null
+    lastPurchaseId: null,
+    lastDeliveredPurchaseId: null
 };
 
 const lastPurchaseId = (state = initialState.lastPurchaseId, action) => {
@@ -15,8 +16,18 @@ const lastPurchaseId = (state = initialState.lastPurchaseId, action) => {
     }
 };
 
+const lastDeliveredPurchaseId = (state = initialState.lastDeliveredPurchaseId, action) => {
+    switch (action.type) {
+        case actionTypes.DELIVER_TICKETS_COMPLETED:
+            return action.purchaseId;
+        default:
+            return state;
+    }
+};
+
 const reducer = combineReducers({
-    lastPurchaseId
+    lastPurchaseId,
+    lastDeliveredPurchaseId
 });
 
 export default reducer;

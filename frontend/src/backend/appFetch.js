@@ -59,7 +59,7 @@ export const appFetch = async (method, path, body) => {
     try {
 
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${path}`, getOptions(method, body));
-        const appFetchResponse = {ok: response.ok, payload: null, httpStatus: response.status};
+        const appFetchResponse = {ok: response.ok, payload: null};
 
         if (response.status === 401 && reauthenticationCallback){
             reauthenticationCallback();
@@ -76,7 +76,7 @@ export const appFetch = async (method, path, body) => {
         if (networkErrorCallback) {
             networkErrorCallback();
         }
-        return {ok: false, payload: null, httpStatus: null};
+        return {ok: false, payload: null};
     }
 
 }

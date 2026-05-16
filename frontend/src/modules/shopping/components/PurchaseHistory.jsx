@@ -53,33 +53,33 @@ const PurchaseHistory = () => {
                     <Table responsive hover className="align-middle">
                         <thead>
                             <tr>
-                                <th><FormattedMessage id="project.shopping.PurchaseHistory.purchaseId"/></th>
                                 <th><FormattedMessage id="project.shopping.PurchaseHistory.purchaseDate"/></th>
+                                <th><FormattedMessage id="project.shopping.PurchaseHistory.purchaseId"/></th>
                                 <th><FormattedMessage id="project.shopping.PurchaseHistory.movie"/></th>
-                                <th><FormattedMessage id="project.shopping.PurchaseHistory.sessionDate"/></th>
                                 <th><FormattedMessage id="project.shopping.PurchaseHistory.numTickets"/></th>
                                 <th><FormattedMessage id="project.shopping.PurchaseHistory.totalPrice"/></th>
+                                <th><FormattedMessage id="project.shopping.PurchaseHistory.sessionDate"/></th>
                                 <th><FormattedMessage id="project.shopping.PurchaseHistory.delivered"/></th>
                             </tr>
                         </thead>
                         <tbody>
                             {purchaseSearch.items.map(purchase =>
                                 <tr key={purchase.id}>
-                                    <td>{purchase.id}</td>
                                     <td>
                                         <FormattedDate value={new Date(purchase.purchaseDate)}/>
                                         {' '}
                                         <FormattedTime value={new Date(purchase.purchaseDate)}/>
                                     </td>
+                                    <td>{purchase.id}</td>
                                     <td>{purchase.movieTitle}</td>
+                                    <td>{purchase.numTickets}</td>
+                                    <td>
+                                        <FormattedNumber value={purchase.totalPrice} style="currency" currency="EUR"/>
+                                    </td>
                                     <td>
                                         <FormattedDate value={new Date(purchase.sessionDate)}/>
                                         {' '}
                                         <FormattedTime value={new Date(purchase.sessionDate)}/>
-                                    </td>
-                                    <td>{purchase.numTickets}</td>
-                                    <td>
-                                        <FormattedNumber value={purchase.totalPrice} style="currency" currency="EUR"/>
                                     </td>
                                     <td>
                                         {purchase.delivered ? (

@@ -1,22 +1,25 @@
 import {useState} from 'react';
-import {FormattedMessage, useIntl} from 'react-intl';
+import {useDispatch} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
+import {useNavigate} from 'react-router';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
+import * as actions from '../actions';
 import backend from '../../../backend';
-import {Errors, Success} from '../../common';
+import {Errors} from '../../common';
 
 const DeliverTickets = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [purchaseId, setPurchaseId] = useState('');
     const [bankCard, setBankCard] = useState('');
     const [formValidated, setFormValidated] = useState(false);
     const [backendErrors, setBackendErrors] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const intl = useIntl();
     let form;
 
     const handleSubmit = async event => {
@@ -28,20 +31,13 @@ const DeliverTickets = () => {
             const response = await backend.purchaseService.deliverTickets(Number(purchaseId), bankCard);
 
             if (response.ok) {
-                setBackendErrors(null);
-                setSuccessMessage(intl.formatMessage({id: 'project.shopping.DeliverTickets.success'}));
-            } else if (response.httpStatus === 403) {
-                setSuccessMessage(null);
-                setBackendErrors({
-                    globalError: intl.formatMessage({id: 'project.global.exceptions.Forbidden'})
-                });
+                dispatch(actions.deliverTicketsCompleted(Number(purchaseId)));
+                navigate('/shopping/deliver-tickets-completed');
             } else {
-                setSuccessMessage(null);
                 setBackendErrors(response.payload);
             }
 
         } else {
-            setSuccessMessage(null);
             setBackendErrors(null);
             setFormValidated(true);
         }
@@ -50,8 +46,6 @@ const DeliverTickets = () => {
 
     return (
         <div className="col-md-10 mx-auto">
-            <Success message={successMessage}
-                onClose={() => setSuccessMessage(null)}/>
             <Errors errors={backendErrors}
                 onClose={() => setBackendErrors(null)}/>
             <Card className="bg-light border-dark">
@@ -70,7 +64,6 @@ const DeliverTickets = () => {
                                 <Form.Control type="number"
                                     value={purchaseId}
                                     onChange={e => setPurchaseId(e.target.value)}
-                                    min={1}
                                     autoFocus
                                     required/>
                                 <Form.Control.Feedback type="invalid">
