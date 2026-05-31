@@ -50,7 +50,7 @@ const Header = () => {
                         </Nav>
                     ) : (
                         <Nav className="ms-auto">
-                            <Nav.Link as={Link} to="/users/login">
+                            <Nav.Link as={Link} to="/users/login" id="loginLink">
                                 <FormattedMessage id="project.users.Login.title"/>
                             </Nav.Link>
                         </Nav>

@@ -48,3 +48,18 @@ INSERT INTO Compra (userId, sessionId, numTickets, bankCard, purchaseDate, deliv
     (1, 1, 2, '1234567890123456', NOW(), FALSE);
 
 UPDATE Session SET freeSeats = 11 WHERE id = 1;
+
+-- Datos para pruebas E2E (Trabajo Tutelado - Tarea 0)
+INSERT INTO User (userName, password, firstName, lastName, email, role) VALUES
+    ('testviewer', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Test', 'Viewer', 'testviewer@test.com', 0),
+    ('testticketseller', '$2a$10$v.js2jCaX3xoKvkR6E2pbugMmZDBPlCAz2gA7EOIZhbkvsPFew/5u', 'Test', 'TicketSeller', 'testticketseller@test.com', 1);
+
+-- Sesión para mañana a las 01:00 con al menos 2 entradas libres (id=15)
+INSERT INTO Session (movieId, roomId, date, price, freeSeats) VALUES
+    (1, 1, CONCAT(DATE_ADD(DATE(NOW()), INTERVAL 1 DAY), ' 01:00:00'), 5.00, 15);
+
+-- Compra del usuario testviewer (userId=3) para la sesión anterior
+INSERT INTO Compra (userId, sessionId, numTickets, bankCard, purchaseDate, delivered) VALUES
+    (3, 15, 2, '9876543210987654', NOW(), FALSE);
+
+UPDATE Session SET freeSeats = 13 WHERE id = 15;
