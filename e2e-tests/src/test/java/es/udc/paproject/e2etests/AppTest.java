@@ -1,6 +1,7 @@
 package es.udc.paproject.e2etests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 
@@ -19,27 +20,35 @@ public class AppTest {
 	@BeforeEach
 	public void setup() {
 		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.manage().window().maximize();
+	}
+
+	private void login(String userName, String password) {
+		driver.get("http://localhost:5173");
+
+		String title = driver.getTitle();
+		assertEquals("PA Cinema", title);
+
+		WebElement loginLink = driver.findElement(By.id("loginLink"));
+		loginLink.click();
+
+		WebElement userNameField = driver.findElement(By.id("userName"));
+		WebElement passwordField = driver.findElement(By.id("password"));
+		userNameField.sendKeys(userName);
+		passwordField.sendKeys(password);
+
+		WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+		submitButton.click();
+
+		WebElement userDropdown = driver.findElement(By.id("user-dropdown"));
+		String value = userDropdown.getText();
+		assertTrue(value.contains(userName));
 	}
 
 	@Test
-	public void eightComponents() {
-
-		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
-		driver.get("https://www.selenium.dev/selenium/web/web-form.html");
-
-		String title = driver.getTitle();
-		assertEquals("Web form", title);
-
-		WebElement textBox = driver.findElement(By.name("my-text"));
-		WebElement submitButton = driver.findElement(By.cssSelector("button"));
-
-		textBox.sendKeys("Selenium");
-		submitButton.click();
-
-		WebElement message = driver.findElement(By.id("message"));
-		String value = message.getText();
-		assertEquals("Received!", value);
-
+	public void testLogin() {
+		login("testviewer", "pa2526");
 	}
 
 	@AfterEach
