@@ -63,15 +63,15 @@ const PurchaseHistory = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {purchaseSearch.items.map(purchase =>
+                            {purchaseSearch.items.map((purchase, index) =>
                                 <tr key={purchase.id}>
                                     <td>
                                         <FormattedDate value={new Date(purchase.purchaseDate)}/>
                                         {' '}
                                         <FormattedTime value={new Date(purchase.purchaseDate)}/>
                                     </td>
-                                    <td>{purchase.id}</td>
-                                    <td>{purchase.movieTitle}</td>
+                                    <td id={index === 0 ? 'purchase-history-first-id' : undefined}>{purchase.id}</td>
+                                    <td id={index === 0 ? 'purchase-history-first-movie' : undefined}>{purchase.movieTitle}</td>
                                     <td>{purchase.numTickets}</td>
                                     <td>
                                         <FormattedNumber value={purchase.totalPrice} style="currency" currency="EUR"/>

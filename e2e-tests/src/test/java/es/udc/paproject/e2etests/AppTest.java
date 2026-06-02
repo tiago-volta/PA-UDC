@@ -17,6 +17,8 @@ import org.openqa.selenium.support.ui.Select;
 
 public class AppTest {
 
+	private static final int E2E_SESSION_ID = 15;
+
 	WebDriver driver;
 
 	@BeforeEach
@@ -80,6 +82,48 @@ public class AppTest {
 		driver.findElement(By.id("buy-form-title"));
 	}
 
+	private void buyTickets() {
+		// Autenticar al usuario "testviewer" (Tarea 0).
+		login("testviewer", "pa2526");
+
+		// Acceder a la URL de detalle de la sesión E2E (id=15 en 2-MySQLCreateData.sql).
+		driver.get("http://localhost:5173/catalog/session-details/" + E2E_SESSION_ID);
+
+		// Localizar el nombre de la película y guardarlo en una variable.
+		WebElement sessionTitle = driver.findElement(By.id("session-details-title"));
+		String movieTitle = sessionTitle.getText();
+
+		// Rellenar el formulario de compra para adquirir dos entradas.
+		WebElement numTicketsField = driver.findElement(By.id("numTickets"));
+		numTicketsField.clear();
+		numTicketsField.sendKeys("2");
+
+		WebElement bankCardField = driver.findElement(By.id("bankCard"));
+		bankCardField.sendKeys("1234567890123456");
+
+		// Hacer clic en el botón de comprar.
+		WebElement buyButton = driver.findElement(By.id("buy-form-submit"));
+		buyButton.click();
+
+		// Localizar el identificador de la compra y guardarlo en una variable.
+		WebElement purchaseIdElement = driver.findElement(By.id("purchase-completed-id"));
+		String purchaseId = purchaseIdElement.getText();
+
+		// Hacer clic en la opción que muestra el histórico de compras del usuario.
+		WebElement userDropdown = driver.findElement(By.id("user-dropdown"));
+		userDropdown.click();
+
+		WebElement purchaseHistoryLink = driver.findElement(By.id("purchase-history-link"));
+		purchaseHistoryLink.click();
+
+		// Comprobar que la primera compra del histórico coincide con id y película esperados.
+		WebElement firstPurchaseId = driver.findElement(By.id("purchase-history-first-id"));
+		WebElement firstPurchaseMovie = driver.findElement(By.id("purchase-history-first-movie"));
+
+		assertEquals(purchaseId, firstPurchaseId.getText());
+		assertEquals(movieTitle, firstPurchaseMovie.getText());
+	}
+
 	@Test
 	public void testLogin() {
 		login("testviewer", "pa2526");
@@ -88,6 +132,11 @@ public class AppTest {
 	@Test
 	public void testSessionDetails() {
 		viewSessionDetails();
+	}
+
+	@Test
+	public void testBuyTickets() {
+		buyTickets();
 	}
 
 	@AfterEach

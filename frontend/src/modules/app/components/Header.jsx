@@ -33,7 +33,7 @@ const Header = () => {
                                     <FormattedMessage id="project.users.ChangePassword.title"/>
                                 </NavDropdown.Item>
                                 {userRole === 'SPECTATOR' &&
-                                    <NavDropdown.Item as={Link} to="/shopping/purchase-history">
+                                    <NavDropdown.Item as={Link} to="/shopping/purchase-history" id="purchase-history-link">
                                         <FormattedMessage id="project.shopping.PurchaseHistory.title"/>
                                     </NavDropdown.Item>
                                 }
