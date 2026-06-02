@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class AppTest {
 
@@ -46,9 +48,46 @@ public class AppTest {
 		assertTrue(value.contains(userName));
 	}
 
+	private void viewSessionDetails() {
+		login("testviewer", "pa2526");
+
+		WebElement dateDropdown = driver.findElement(By.id("billboardDate"));
+		Select select = new Select(dateDropdown);
+		select.selectByIndex(1);
+
+		List<WebElement> movieLinks = driver.findElements(By.cssSelector("[id^='movie-link-']"));
+		WebElement firstMovieLink = movieLinks.get(0);
+		String movieTitle = firstMovieLink.getText();
+
+		WebElement firstCard = driver.findElement(By.cssSelector(".card"));
+		WebElement firstSessionLink = firstCard.findElement(By.cssSelector("[id^='session-link-']"));
+		String sessionTime = firstSessionLink.getText();
+		firstSessionLink.click();
+
+		driver.findElement(By.id("session-details-title"));
+		driver.findElement(By.id("session-details-date"));
+		driver.findElement(By.id("session-details-runtime"));
+		driver.findElement(By.id("session-details-price"));
+		driver.findElement(By.id("session-details-room"));
+		driver.findElement(By.id("session-details-free-seats"));
+
+		WebElement sessionTitle = driver.findElement(By.id("session-details-title"));
+		WebElement sessionTimeOnDetails = driver.findElement(By.id("session-details-time"));
+
+		assertEquals(movieTitle, sessionTitle.getText());
+		assertEquals(sessionTime, sessionTimeOnDetails.getText());
+
+		driver.findElement(By.id("buy-form-title"));
+	}
+
 	@Test
 	public void testLogin() {
 		login("testviewer", "pa2526");
+	}
+
+	@Test
+	public void testSessionDetails() {
+		viewSessionDetails();
 	}
 
 	@AfterEach

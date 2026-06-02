@@ -2,14 +2,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
-import {FormattedMessage, useIntl} from "react-intl";
+import {FormattedMessage, FormattedTime} from "react-intl";
 import MovieLink from "./MovieLink";
 import {Link} from 'react-router';
 
 
 const Movies = ({movies}) => {
-
-    const intl = useIntl();
 
     if (!movies) {
         return null;
@@ -41,11 +39,11 @@ const Movies = ({movies}) => {
                                         key={session.id}
                                         className="badge bg-light border border-secondary rounded-pill px-3 py-2"
                                     >
-                                        <Link to={`/catalog/session-details/${session.id}`}>
-                                            {intl.formatDate(new Date(session.date), {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
+                                        <Link to={`/catalog/session-details/${session.id}`}
+                                              id={`session-link-${session.id}`}>
+                                            <FormattedTime value={new Date(session.date)}
+                                                             hour="2-digit"
+                                                             minute="2-digit"/>
                                         </Link>
                                     </span>
                                 ))}

@@ -56,7 +56,12 @@ const SessionDetails = () => {
                         <MovieLink id={session.movieId} title={session.movieTitle}/>
                     </Card.Title>
                     <Card.Subtitle id="session-details-date" className="text-muted mb-4 text-center">
-                        <FormattedDate value={new Date(session.date)}/> - <FormattedTime value={new Date(session.date)}/>
+                        <FormattedDate value={new Date(session.date)}/> -{' '}
+                        <span id="session-details-time">
+                            <FormattedTime value={new Date(session.date)}
+                                           hour="2-digit"
+                                           minute="2-digit"/>
+                        </span>
                     </Card.Subtitle>
                         
                     <Row className="mb-3">
