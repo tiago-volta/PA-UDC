@@ -129,7 +129,7 @@ public class AppTest {
 		driver.findElement(By.id("user-dropdown")).click();
 		driver.findElement(By.id("deliver-tickets-link")).click();
 
-		driver.findElement(By.id("purchaseId")).sendKeys("3");
+		driver.findElement(By.id("purchaseId")).sendKeys("4");
 		driver.findElement(By.id("bankCard")).sendKeys("9876543210987654");
 		driver.findElement(By.id("deliver-tickets-submit")).click();
 
@@ -139,7 +139,7 @@ public class AppTest {
 		driver.findElement(By.id("user-dropdown")).click();
 		driver.findElement(By.id("deliver-tickets-link")).click();
 
-		driver.findElement(By.id("purchaseId")).sendKeys("3");
+		driver.findElement(By.id("purchaseId")).sendKeys("4");
 		driver.findElement(By.id("bankCard")).sendKeys("9876543210987654");
 		driver.findElement(By.id("deliver-tickets-submit")).click();
 

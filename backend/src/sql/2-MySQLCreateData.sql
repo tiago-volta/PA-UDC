@@ -62,4 +62,9 @@ INSERT INTO Session (movieId, roomId, date, price, freeSeats) VALUES
 INSERT INTO Compra (userId, sessionId, numTickets, bankCard, purchaseDate, delivered) VALUES
     (3, 15, 2, '9876543210987654', NOW(), FALSE);
 
+-- Compra para el test de entrega de entradas para el test
+INSERT INTO Compra (userId, sessionId, numTickets, bankCard, purchaseDate, delivered) VALUES
+    ((SELECT id FROM User WHERE userName='testviewer'),
+     15, 2, '9876543210987654', NOW(), FALSE);
+
 UPDATE Session SET freeSeats = 13 WHERE id = 15;
