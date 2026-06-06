@@ -123,6 +123,30 @@ public class AppTest {
 		assertEquals(purchaseId, firstPurchaseId.getText());
 		assertEquals(movieTitle, firstPurchaseMovie.getText());
 	}
+	private void deliverTickets() {
+		login("testticketseller", "pa2526");
+
+		driver.findElement(By.id("user-dropdown")).click();
+		driver.findElement(By.id("deliver-tickets-link")).click();
+
+		driver.findElement(By.id("purchaseId")).sendKeys("3");
+		driver.findElement(By.id("bankCard")).sendKeys("9876543210987654");
+		driver.findElement(By.id("deliver-tickets-submit")).click();
+
+		WebElement successMessage = driver.findElement(By.id("deliver-tickets-completed-id"));
+		assertTrue(successMessage.isDisplayed());
+
+		driver.findElement(By.id("user-dropdown")).click();
+		driver.findElement(By.id("deliver-tickets-link")).click();
+
+		driver.findElement(By.id("purchaseId")).sendKeys("3");
+		driver.findElement(By.id("bankCard")).sendKeys("9876543210987654");
+		driver.findElement(By.id("deliver-tickets-submit")).click();
+
+		WebElement errorMessage = driver.findElement(By.id("errors"));
+		assertTrue(errorMessage.isDisplayed());
+	}
+
 
 	@Test
 	public void testLogin() {
@@ -138,6 +162,14 @@ public class AppTest {
 	public void testBuyTickets() {
 		buyTickets();
 	}
+
+	@Test
+	public void testDeliverTickets() {
+		deliverTickets();
+	}
+
+	/*@AfterEach
+	public final void teardown() {*/
 
 	@AfterEach
 	public final void teardown() {

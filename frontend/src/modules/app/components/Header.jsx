@@ -38,7 +38,7 @@ const Header = () => {
                                     </NavDropdown.Item>
                                 }
                                 {userRole === 'TICKET_SELLER' &&
-                                    <NavDropdown.Item as={Link} to="/shopping/deliver-tickets">
+                                    <NavDropdown.Item as={Link} to="/shopping/deliver-tickets" id="deliver-tickets-link">
                                         <FormattedMessage id="project.shopping.DeliverTickets.title"/>
                                     </NavDropdown.Item>
                                 }

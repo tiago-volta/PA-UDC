@@ -25,7 +25,7 @@ const Errors = ({errors, onClose}) => {
 
     return (
 
-        <Alert variant="danger" onClose={() => onClose()} dismissible>
+        <Alert id="errors" variant="danger" onClose={() => onClose()} dismissible>
 
             {globalError ? globalError : ''}
 

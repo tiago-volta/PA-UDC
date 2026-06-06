@@ -88,7 +88,7 @@ const DeliverTickets = () => {
                         </Form.Group>
                         <Form.Group as={Row}>
                             <Col md={{span: 4, offset: 3}}>
-                                <Button type="submit">
+                                <Button id="deliver-tickets-submit" type="submit">
                                     <FormattedMessage id="project.shopping.DeliverTickets.submit"/>
                                 </Button>
                             </Col>
