@@ -6,7 +6,7 @@
 ![Database](https://img.shields.io/badge/Database-MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 ![E2E](https://img.shields.io/badge/E2E-Selenium%204-43B02A?style=flat-square&logo=selenium&logoColor=white)
 ![Score](https://img.shields.io/badge/Project%20Score-8.9%2F10-success?style=flat-square)
-![Tutored](https://img.shields.io/badge/Tutored%20Work-%2F10-lightgrey?style=flat-square)
+![Tutored](https://img.shields.io/badge/Tutored%20Work-10%2F10-lightgrey?style=flat-square)
 
 ## 🎯 Overview
 
